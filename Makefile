@@ -121,10 +121,10 @@ clean:
 else ifeq ($(findstring Lib_,$(ConfigName)),Lib_)
 all:
 	$(CXX)  $(CXXFLAGS) -o $(TARGET) $(CPPS) $(LIBS) $(LIBPATH);
-	rm -fR $(MY_LIB_ROOT_v3)/bingo/include
+	rm -fR $(MY_LIB_ROOT_v3)/bingo/include/bingo
 	cp $(TARGET) $(MY_LIB_ROOT_v3);
-	cp -fR bingo $(MY_LIB_ROOT_v3)/bingo/include;
-	find $(MY_LIB_ROOT_v3)/bingo/include/ -regextype "posix-egrep" -regex '.*\.(o|cpp)' -exec rm -rf {} \;
+	cp -fR bingo $(MY_LIB_ROOT_v3)/bingo/include/bingo;
+	find $(MY_LIB_ROOT_v3)/bingo/include/bingo/ -regextype "posix-egrep" -regex '.*\.(o|cpp)' -exec rm -rf {} \;
 
 clean:
 	rm -f $(TARGET)
