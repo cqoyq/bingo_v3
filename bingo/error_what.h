@@ -24,7 +24,7 @@ enum {
 	// -------------------------------- tcp-server ------------------------------ //
 	ERROR_TYPE_TCP_SERVER_CLOSE_SOCKET_BY_CLIENT								= 0x06,
 	ERROR_TYPE_TCP_SERVER_CLOSE_SOCKET_BY_HEARTBEAT							= 0x07,
-	ERROR_TYPE_TCP_SERVER_CLOSE_SOCKET_BY_AUTHRICATION					= 0x08,
+	ERROR_TYPE_TCP_SERVER_CLOSE_SOCKET_BY_AUTHENTICATION				= 0x08,
 	ERROR_TYPE_TCP_SERVER_CLOSE_SOCKET_BY_SERVER								= 0x09,
 
 	// -------------------------------- tcp-client ------------------------------ //
