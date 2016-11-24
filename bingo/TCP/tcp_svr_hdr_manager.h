@@ -12,7 +12,7 @@
 #include "bingo/error_what.h"
 #include "tcp_handler_manager.h"
 
-namespace bingo { namespace tcp {
+namespace bingo { namespace TCP {
 
 template<class HANDLER>
 struct find_all_of_handler_because_heartjump_timeout{

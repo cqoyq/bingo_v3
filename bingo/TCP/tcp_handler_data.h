@@ -8,7 +8,7 @@
 #ifndef BINGO_TCP_HANDLER_DATA_HEADER_H_
 #define BINGO_TCP_HANDLER_DATA_HEADER_H_
 
-namespace bingo { namespace tcp {
+namespace bingo { namespace TCP {
 
 // tcp_handler_data: The struct save handler information.
 struct tcp_handler_data{

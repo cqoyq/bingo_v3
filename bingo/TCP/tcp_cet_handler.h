@@ -25,7 +25,7 @@ using namespace boost::asio;
 #include <boost/date_time/posix_time/posix_time.hpp>
 using namespace boost::posix_time;
 
-namespace bingo { namespace tcp {
+namespace bingo { namespace TCP {
 
 template<typename HEARTJUMP,
 		 typename PARSER,

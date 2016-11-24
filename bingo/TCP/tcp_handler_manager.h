@@ -23,7 +23,7 @@ using namespace std;
 #include <boost/thread/thread.hpp>
 using namespace boost;
 
-namespace bingo { namespace tcp {
+namespace bingo { namespace TCP {
 
 // tcp_handler_manager's filters.
 struct find_first_tcp_handler_same_pointer{

@@ -20,7 +20,7 @@ using namespace std;
 using namespace boost;
 using namespace boost::asio;
 
-namespace bingo { namespace tcp {
+namespace bingo { namespace TCP {
 
 template<typename HANDLER,
 		 typename PARSER>

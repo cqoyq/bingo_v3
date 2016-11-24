@@ -10,7 +10,7 @@
 
 #include "tcp_handler_manager.h"
 
-namespace bingo { namespace tcp {
+namespace bingo { namespace TCP {
 
 template<class HANDLER>
 class tcp_cet_hdr_manager : public tcp_handler_manager<HANDLER>{
