@@ -43,7 +43,7 @@ bool rbmq_cfg::check_node(){
 	//	<application>
 	//		<rbmq_log_visitor>
 	//				<rabbitmq_key>key</rabbitmq_key>						// the key in rabbitmq-set
-	//				<log_level>4</log_level>											// rabbitmq log level
+	//				<log_level>all</log_level>											// rabbitmq log level
 	//		</rbmq_log_visitor>
 	//	</application>
 

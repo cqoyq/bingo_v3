@@ -10,11 +10,11 @@
 using namespace bingo::log::config;
 
 local_logger_type bingo::log::config::string_to_local_logger_type(string& s){
-	if(s.compare("every_day")){
+	if(s.compare("every_day") == 0){
 		return LOCAL_LOGGER_TYPE_EVERY_DAY;
-	}else if(s.compare("every_hour")){
+	}else if(s.compare("every_hour") == 0){
 		return LOCAL_LOGGER_TYPE_EVERY_HOUR;
-	}else if(s.compare("one_file")){
+	}else if(s.compare("one_file") == 0){
 		return LOCAL_LOGGER_TYPE_ONE_FILE;
 	}else
 		return LOCAL_LOGGER_TYPE_UNKNOWN;
@@ -56,7 +56,7 @@ bool local_cfg::check_node(){
 	//				<type>every_day</type>	// 日志类型（every_day, every_hour, one_file）
 	//				<filename></filename>		// 日志名称
 	//				<path></path>					// 日志所在路径
-	//				<level></level>					// 日志层级，大于配置层级的日志，才会写入日志
+	//				<level>all</level>					// 日志层级，大于配置层级的日志，才会写入日志
 	//		</ local_log_visitor >
 	//	</application>
 

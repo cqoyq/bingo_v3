@@ -37,22 +37,22 @@ string bingo::log::level_to_string(log_level level){
 }
 
 log_level bingo::log::string_to_level(string& s){
-	if(s.compare("off")){
+	if(s.compare("off") == 0){
 		return LOG_LEVEL_OFF;
 
-	}else if(s.compare("fatal")){
+	}else if(s.compare("fatal") == 0){
 		return LOG_LEVEL_FATAL;
 
-	}else if(s.compare("error")){
+	}else if(s.compare("error") == 0){
 		return LOG_LEVEL_ERROR;
 
-	}else if(s.compare("info")){
+	}else if(s.compare("info") == 0){
 		return LOG_LEVEL_INFO;
 
-	}else if(s.compare("debug")){
+	}else if(s.compare("debug") == 0){
 		return LOG_LEVEL_DEBUG;
 
-	}else if(s.compare("all")){
+	}else if(s.compare("all") == 0){
 		return LOG_LEVEL_ALL;
 
 	}else
