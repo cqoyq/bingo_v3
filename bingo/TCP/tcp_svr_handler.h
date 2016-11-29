@@ -214,7 +214,7 @@ public:
 
 
 
-private:
+protected:
 
 
 	void read_handler(const boost::system::error_code& ec,
@@ -473,7 +473,7 @@ public:
 		return 0;
 	}
 
-private:
+protected:
 	boost::asio::io_service& ios_;
 	ip::tcp::socket socket_;
 
