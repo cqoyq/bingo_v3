@@ -7,7 +7,7 @@
 
 #include "json_parser.h"
 
-using namespace bingo::config::json;
+using namespace bingo::configuration::json;
 
 json_parser::json_parser(bool is_pretty) : is_pretty_(is_pretty){
 	node_ = 0;

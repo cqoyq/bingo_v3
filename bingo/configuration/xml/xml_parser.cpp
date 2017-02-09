@@ -7,7 +7,7 @@
 
 #include "xml_parser.h"
 
-using namespace bingo::config::xml;
+using namespace bingo::configuration::xml;
 
 xml_parser::xml_parser(bool is_pretty) : is_pretty_(is_pretty){
 	node_ = 0;

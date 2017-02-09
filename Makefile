@@ -23,9 +23,9 @@ LIBPATH = -L$(BOOST_LIB_ROOT) \
 OBJS =  main.o \
 		bingo/string.o \
 		bingo/error_what.o \
-		bingo/config/node.o \
-		bingo/config/xml/xml_parser.o \
-		bingo/config/json/json_parser.o \
+		bingo/configuration/node.o \
+		bingo/configuration/xml/xml_parser.o \
+		bingo/configuration/json/json_parser.o \
 		bingo/database/db_factory.o \
 		bingo/database/db_field.o \
 		bingo/database/db_row.o \
@@ -57,9 +57,9 @@ OBJS =  main.o \
 		
 CPPS = bingo/string.cpp \
 		bingo/error_what.cpp \
-		bingo/config/node.cpp \
-		bingo/config/xml/xml_parser.cpp \
-		bingo/config/json/json_parser.cpp \
+		bingo/configuration/node.cpp \
+		bingo/configuration/xml/xml_parser.cpp \
+		bingo/configuration/json/json_parser.cpp \
 		bingo/database/db_factory.cpp \
 		bingo/database/db_field.cpp \
 		bingo/database/db_row.cpp \
@@ -100,10 +100,10 @@ DEBUGS =
 endif
 
 ifeq ($(findstring Test_Debug,$(ConfigName)),Test_Debug)
-	CXXFLAGS =	-O2 -g -Wall -fmessage-length=0 -std=c++11 $(DEBUGS) $(INCLUDE) 
+	CXXFLAGS =	-O0 -g -Wall -fmessage-length=0 -std=c++11 $(DEBUGS) $(INCLUDE) 
 	TARGET = mytest
 else ifeq ($(findstring Lib_Debug,$(ConfigName)),Lib_Debug)
-	CXXFLAGS =	-O2 -g -fPIC  -shared -std=c++11 $(INCLUDE)
+	CXXFLAGS =	-O0 -g -fPIC  -shared -std=c++11 $(INCLUDE)
 	TARGET = libbingo_v3_d.so
 else ifeq ($(findstring Lib_Release,$(ConfigName)),Lib_Release)
 	CXXFLAGS =	-O2 -fPIC  -shared -std=c++11 $(INCLUDE)

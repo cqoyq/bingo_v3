@@ -7,8 +7,8 @@
 
 #include "rbmq_log_visitor.h"
 
-#include "bingo/config/node.h"
-using namespace bingo::config;
+#include "bingo/configuration/node.h"
+using namespace bingo::configuration;
 
 using namespace bingo::log::handlers;
 

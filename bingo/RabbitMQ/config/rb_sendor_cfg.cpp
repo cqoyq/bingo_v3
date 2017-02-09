@@ -52,7 +52,7 @@ bool rb_sendor_cfg::check_node(){
 	//		</rabbitmq_sendor>
 	//	</application>
 
-	bingo::config::node* list = xml_.get_node("application.rabbitmq_sendor.list");
+	bingo::configuration::node* list = xml_.get_node("application.rabbitmq_sendor.list");
 	if(list == 0) {
 		xml_.err().clone(err_);
 		return false;
@@ -60,7 +60,7 @@ bool rb_sendor_cfg::check_node(){
 
 	int max =  list->child.size();
 	for (int i = 0; i <max; i++) {
-		bingo::config::node* item = list->child[i];
+		bingo::configuration::node* item = list->child[i];
 
 		string s_key, s_ip, s_port, s_username, s_pwd, s_host, s_exchange, s_routingkey;
 		int n_type = 0;

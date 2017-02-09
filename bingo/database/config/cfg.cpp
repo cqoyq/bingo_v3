@@ -87,22 +87,22 @@ bool cfg::check_node(){
 		node* conn = conn_set->child[i];
 
 		// Check attribute.
-		bingo::config::node_attr* key_attr  = conn->attrs["key"];
+		bingo::configuration::node_attr* key_attr  = conn->attrs["key"];
 		if(key_attr == 0) { err_.err_no(ERROR_TYPE_DATABASE_CHECK_CFG_NODE_FAIL); err_.err_message("connector node attribute 'key' isn't exist!"); return false;}
 
-		bingo::config::node_attr* ip_attr  = conn->attrs["ip"];
+		bingo::configuration::node_attr* ip_attr  = conn->attrs["ip"];
 		if(ip_attr == 0) { err_.err_no(ERROR_TYPE_DATABASE_CHECK_CFG_NODE_FAIL); err_.err_message("connector node attribute 'ip' isn't exist!"); return false;}
 
-		bingo::config::node_attr* dbname_attr  = conn->attrs["dbname"];
+		bingo::configuration::node_attr* dbname_attr  = conn->attrs["dbname"];
 		if(dbname_attr == 0) { err_.err_no(ERROR_TYPE_DATABASE_CHECK_CFG_NODE_FAIL); err_.err_message("connector node attribute 'dbname' isn't exist!"); return false;}
 
-		bingo::config::node_attr* user_attr  = conn->attrs["user"];
+		bingo::configuration::node_attr* user_attr  = conn->attrs["user"];
 		if(user_attr == 0) { err_.err_no(ERROR_TYPE_DATABASE_CHECK_CFG_NODE_FAIL); err_.err_message("connector node attribute 'user' isn't exist!"); return false;}
 
-		bingo::config::node_attr* pwd_attr  = conn->attrs["pwd"];
+		bingo::configuration::node_attr* pwd_attr  = conn->attrs["pwd"];
 		if(pwd_attr == 0) { err_.err_no(ERROR_TYPE_DATABASE_CHECK_CFG_NODE_FAIL); err_.err_message("connector node attribute 'pwd' isn't exist!"); return false;}
 
-		bingo::config::node_attr* port_attr  = conn->attrs["port"];
+		bingo::configuration::node_attr* port_attr  = conn->attrs["port"];
 		if(port_attr == 0) { err_.err_no(ERROR_TYPE_DATABASE_CHECK_CFG_NODE_FAIL); err_.err_message("connector node attribute 'port' isn't exist!"); return false;}
 
 		cfg_value* v = new cfg_value();

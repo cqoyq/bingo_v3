@@ -50,14 +50,14 @@ bool tcp_receiver_cfg::check_node(){
 	//		</tcp_receiver>
 	//	</application>
 
-	bingo::config::node* ip = xml_.get_node("application.tcp_receiver.ip");
+	bingo::configuration::node* ip = xml_.get_node("application.tcp_receiver.ip");
 	if(ip == 0) {
 		xml_.err().clone(err_);
 		return false;
 	}
 	value_.ip = ip->value;
 
-	bingo::config::node* port = xml_.get_node("application.tcp_receiver.port");
+	bingo::configuration::node* port = xml_.get_node("application.tcp_receiver.port");
 	if(port == 0) {
 		xml_.err().clone(err_);
 		return false;

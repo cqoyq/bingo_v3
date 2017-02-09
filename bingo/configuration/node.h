@@ -16,7 +16,7 @@ using namespace std;
 
 #include "bingo/foreach_.h"
 
-namespace bingo { namespace config {
+namespace bingo { namespace configuration {
 
 // Node attribute class
 struct node_attr{

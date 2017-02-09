@@ -12,8 +12,8 @@
 
 #include "bingo/foreach_.h"
 #include "bingo/error_what.h"
-#include "bingo/config/node.h"
-using bingo::config::node;
+#include "bingo/configuration/node.h"
+using bingo::configuration::node;
 
 #include <boost/property_tree/json_parser.hpp>
 namespace pt = boost::property_tree;
@@ -22,7 +22,7 @@ using namespace boost;
 #include <boost/exception/all.hpp>
 #include <boost/current_function.hpp>
 
-namespace bingo { namespace config { namespace json {
+namespace bingo { namespace configuration { namespace json {
 
 // Json parse without attribute
 class json_parser {

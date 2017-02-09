@@ -10,8 +10,8 @@
 
 #include "bingo/error_what.h"
 #include "bingo/string.h"
-#include "bingo/config/xml/xml_parser.h"
-using namespace bingo::config::xml;
+#include "bingo/configuration/xml/xml_parser.h"
+using namespace bingo::configuration::xml;
 
 #include "../log_level.h"
 

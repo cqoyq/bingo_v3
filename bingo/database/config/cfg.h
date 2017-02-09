@@ -8,8 +8,8 @@
 #ifndef BINGO_DATABASE_CONFIG_CFG_H_
 #define BINGO_DATABASE_CONFIG_CFG_H_
 
-#include "bingo/config/xml/xml_parser.h"
-using namespace bingo::config::xml;
+#include "bingo/configuration/xml/xml_parser.h"
+using namespace bingo::configuration::xml;
 
 #include "bingo/string.h"
 #include "bingo/type.h"

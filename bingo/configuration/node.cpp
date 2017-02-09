@@ -7,7 +7,7 @@
 
 #include "node.h"
 
-using namespace bingo::config;
+using namespace bingo::configuration;
 
 // ------------------------------  node_attr_set ----------------------------------- //
 

@@ -10,8 +10,8 @@
 
 #include "bingo/foreach_.h"
 #include "bingo/error_what.h"
-#include "bingo/config/node.h"
-using bingo::config::node;
+#include "bingo/configuration/node.h"
+using bingo::configuration::node;
 
 #include <boost/exception/all.hpp>
 #include <boost/current_function.hpp>
@@ -20,7 +20,7 @@ using bingo::config::node;
 namespace pt = boost::property_tree;
 using namespace boost;
 
-namespace bingo { namespace config { namespace xml {
+namespace bingo { namespace configuration { namespace xml {
 
 class xml_parser {
 public:
