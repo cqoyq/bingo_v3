@@ -1,5 +1,5 @@
 /*
- * singlesendor.cpp
+ * simple_sendor.cpp
  *
  *  Created on: 2016-9-2
  *      Author: root
@@ -9,22 +9,22 @@
 
 #include "bingo/thread/all.h"
 
-#include "single_sendor.h"
+#include "simple_sendor.h"
 
-// --------------------------- rabbitmq client  ------------------------- //
+// --------------------------- rabbitmq logger  ------------------------- //
 
-log_handler* rb_snd_log;
+log_handler* rb_simple_sendor_logger;
 
-// --------------------------- make sendor thread ------------------------- //
+// --------------------------- rabbitmq sendor thread ------------------------- //
 
-void make_sendor_thr(bingo::RabbitMQ::config::rb_sendor_cfg_value*& p){
+void make_simple_sendor_thr(bingo::RabbitMQ::config::rb_sendor_cfg_value*& p){
 
 //	cout << "make_sendor_thr map-key:" << p->map_key << ",p:" << p << endl;
 
 	while(true){
 		boost::asio::io_service ioService;
 
-		AsioHandler handler(ioService, rb_snd_log);
+		AsioHandler handler(ioService, rb_simple_sendor_logger);
 		handler.connect(p->ip.c_str(), p->port);
 
 		AMQP::Connection connection(&handler, AMQP::Login(
@@ -40,9 +40,9 @@ void make_sendor_thr(bingo::RabbitMQ::config::rb_sendor_cfg_value*& p){
 
 			// report error
 	//		std::cout << "channel error: " << message << std::endl;
-			if(rb_snd_log){
+			if(rb_simple_sendor_logger){
 				string s_msg = message;
-				rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR, s_msg);
+				rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR, s_msg);
 			}
 		});
 
@@ -52,18 +52,18 @@ void make_sendor_thr(bingo::RabbitMQ::config::rb_sendor_cfg_value*& p){
 			{
 	//				bool re = channel->publish("", "hello", "Hello World!");
 	//				std::cout << " [x] Sent 'Hello World!'" << ",return:" << re << std::endl;
-				if(rb_snd_log){
+				if(rb_simple_sendor_logger){
 					string s_msg = "send ready ok! map-key:" + p->map_key;
-					rb_snd_log->handle(bingo::log::LOG_LEVEL_INFO,  RABBITMQ_SINGLE_SENDOR_INFO, s_msg);
+					rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_INFO,  RABBITMQ_SINGLE_SENDOR_INFO, s_msg);
 				}
 			}
 		});
 
 		ioService.run();
 
-		if(rb_snd_log){
+		if(rb_simple_sendor_logger){
 			string s_msg = "ioService is exit!";
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_INFO,  RABBITMQ_SINGLE_SENDOR_INFO, s_msg);
+			rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_INFO,  RABBITMQ_SINGLE_SENDOR_INFO, s_msg);
 		}
 
 	}
@@ -71,19 +71,23 @@ void make_sendor_thr(bingo::RabbitMQ::config::rb_sendor_cfg_value*& p){
 
 // --------------------------- rabbitmq many_to_one task ------------------------- //
 
-typedef bingo::thread::many_to_one<
-		rb_data_message,
-		rb_exit_message
-	> rb_task_by_thread;
-typedef bingo::singleton_v1<rb_task_by_thread,
-		rb_task_by_thread::thr_top_callback
-		> RB_TASK_TYPE;
+class rb_simple_sendor_task : public bingo::thread::many_to_one<rb_data_message, rb_exit_message>{
+public:
+	rb_simple_sendor_task(thr_top_callback& f) :
+		bingo::thread::many_to_one<rb_data_message, rb_exit_message>(f){
+
+	}
+	virtual ~rb_simple_sendor_task(){}
+};
+typedef bingo::singleton_v1<rb_simple_sendor_task,
+		rb_simple_sendor_task::thr_top_callback
+		> RB_SIMPLE_SENDOR_TASK_TYPE;
 
 // --------------------------- rabbitmq task callback ------------------------- //
 
 using namespace bingo::RabbitMQ::handlers;
 
-void single_sendor::rb_top(rb_data_message*& msg, bingo_empty_type&){
+void simple_sendor::rb_top(rb_data_message*& msg, bingo_empty_type&){
 
 	if(is_valid){
 
@@ -102,28 +106,33 @@ void single_sendor::rb_top(rb_data_message*& msg, bingo_empty_type&){
 		// Check map-key.
 		if(p == 0){
 
-			string s_msg = "send task data fail! map-key isn't exist, map-key:";
-			s_msg.append(s_key);
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+			if(rb_simple_sendor_logger){
+				string s_msg = "send task data fail! map-key isn't exist, map-key:";
+				s_msg.append(s_key);
+				rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+			}
 		}else{
 			// Check AMQP::Channel*.
 			if(p->channel == 0){
 
-				string s_msg = "send task data fail! channel is empty.";
-				rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+				if(rb_simple_sendor_logger){
+					string s_msg = "send task data fail! channel is empty.";
+					rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+				}
+
 				return ;
 			}
 
 			// Send message body.
 			bool re = p->channel->publish("", p->routingkey.c_str(), data, data_size);
 			if(!re){
-				if(rb_snd_log){
+				if(rb_simple_sendor_logger){
 					string s_msg = "send task data fail!";
-					rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+					rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
 				}
 			}else{
 #ifdef BINGO_MQ_DEBUG
-				if(rb_snd_log){
+				if(rb_simple_sendor_logger){
 					string_ex t;
 					string s_msg = "send task data success! map-key:" ;
 							s_msg.append(s_key);
@@ -138,7 +147,7 @@ void single_sendor::rb_top(rb_data_message*& msg, bingo_empty_type&){
 							s_msg.append(s_d);
 							s_msg.append("#");
 
-					rb_snd_log->handle(bingo::log::LOG_LEVEL_DEBUG,  RABBITMQ_SINGLE_SENDOR_INFO,  s_msg);
+							rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_DEBUG,  RABBITMQ_SINGLE_SENDOR_INFO,  s_msg);
 				}
 #endif
 			}
@@ -147,7 +156,7 @@ void single_sendor::rb_top(rb_data_message*& msg, bingo_empty_type&){
 	}
 }
 
-void single_sendor::transfer_data_by_routingkey(string& routingkey, char*& in, size_t& in_size){
+void simple_sendor::transfer_data_by_routingkey(string& routingkey, char*& in, size_t& in_size){
 	// Check whether has read cfg.xml file, if don't read, then return directly;
 	if(!is_valid){
 		return ;
@@ -156,11 +165,11 @@ void single_sendor::transfer_data_by_routingkey(string& routingkey, char*& in, s
 	// Check routingkey.
 	config::rb_sendor_cfg_value* cfg_value = cfg_.get_by_routingkey(routingkey);
 	if(cfg_value == 0){
-		if(rb_snd_log){
 
+		if(rb_simple_sendor_logger){
 			string	s_msg = "transfer data is fail, routingkey isn't exist! routingkey:";
 			s_msg.append(routingkey.c_str());
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+			rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
 		}
 		return;
 	}
@@ -168,7 +177,7 @@ void single_sendor::transfer_data_by_routingkey(string& routingkey, char*& in, s
 	// Get key.
 	string key = cfg_value->map_key;
 
-	// Make message package, package construct: mapkey(20) + message_body.
+	// Make message package, package construct: mapkey(40) + message_body.
 	size_t message_size = RABBITMQ_MAPKEY_MAX_SIZE + in_size;
 	char message[message_size];
 	memset(message , 0x00,  message_size);
@@ -180,10 +189,10 @@ void single_sendor::transfer_data_by_routingkey(string& routingkey, char*& in, s
 	rb_data_message* data = new rb_data_message();
 
 	if(data->data.copy(message, message_size, err) == -1){
-		if(rb_snd_log){
 
+		if(rb_simple_sendor_logger){
 			string s_msg = "create task data error, err_no:" + lexical_cast<string>(err.err_no());
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+			rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
 		}
 
 		delete data;
@@ -191,16 +200,17 @@ void single_sendor::transfer_data_by_routingkey(string& routingkey, char*& in, s
 	}
 
 	// Send data to MQ server.
-	if(RB_TASK_TYPE::instance()->put(data, err) == -1){
-		if(rb_snd_log){
+	if(RB_SIMPLE_SENDOR_TASK_TYPE::instance()->put(data, err) == -1){
+
+		if(rb_simple_sendor_logger){
 			string s_msg = "put data to task error, err_no:" + lexical_cast<string>(err.err_no());
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+			rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
 		}
 		delete data;
 	}
 }
 
-void single_sendor::transfer_data_by_key(string& key, char*& in, size_t& in_size){
+void simple_sendor::transfer_data_by_key(string& key, char*& in, size_t& in_size){
 	// Check whether has read cfg.xml file, if don't read, then return directly;
 	if(!is_valid){
 		return ;
@@ -208,14 +218,14 @@ void single_sendor::transfer_data_by_key(string& key, char*& in, size_t& in_size
 
 	// Check key.
 	if(key.length() > RABBITMQ_MAPKEY_MAX_SIZE){
-		if(rb_snd_log){
-			string s_msg = "transfer data is fail, size of key is more then 20!";
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+		if(rb_simple_sendor_logger){
+			string s_msg = "transfer data is fail, size of key is more then 40!";
+			rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
 		}
 		return;
 	}
 
-	// Make message package, package construct: mapkey(20) + message_body.
+	// Make message package, package construct: mapkey(40) + message_body.
 	size_t message_size = RABBITMQ_MAPKEY_MAX_SIZE + in_size;
 	char message[message_size];
 	memset(message , 0x00,  message_size);
@@ -227,9 +237,9 @@ void single_sendor::transfer_data_by_key(string& key, char*& in, size_t& in_size
 	rb_data_message* data = new rb_data_message();
 
 	if(data->data.copy(message, message_size, err) == -1){
-		if(rb_snd_log){
+		if(rb_simple_sendor_logger){
 			string s_msg = "create task data error, err_no:" + lexical_cast<string>(err.err_no());
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+			rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
 		}
 
 		delete data;
@@ -237,46 +247,46 @@ void single_sendor::transfer_data_by_key(string& key, char*& in, size_t& in_size
 	}
 
 	// Send data to MQ server.
-	if(RB_TASK_TYPE::instance()->put(data, err) == -1){
-		if(rb_snd_log){
+	if(RB_SIMPLE_SENDOR_TASK_TYPE::instance()->put(data, err) == -1){
+		if(rb_simple_sendor_logger){
 			string s_msg = "put data to task error, err_no:" + lexical_cast<string>(err.err_no());
-			rb_snd_log->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
+			rb_simple_sendor_logger->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_SINGLE_SENDOR_ERROR,  s_msg);
 		}
 		delete data;
 	}
 }
 
 
-single_sendor::single_sendor():  rb_sendor() {
+simple_sendor::simple_sendor():  rb_sendor() {
 	// TODO Auto-generated constructor stub
 
 	is_valid = cfg_.read_xml();
 	if(!is_valid){
 		cfg_.err().clone(e_what_);
 	}else{
-		RB_TASK_TYPE::construct(
-					bind(&single_sendor::rb_top, this, _1, _2) // thread_task queue top callback
+		RB_SIMPLE_SENDOR_TASK_TYPE::construct(
+					bind(&simple_sendor::rb_top, this, _1, _2) // thread_task queue top callback
 						);
 	}
 }
 
-single_sendor::~single_sendor() {
+simple_sendor::~simple_sendor() {
 	// TODO Auto-generated destructor stub
-	if(is_valid)	 RB_TASK_TYPE::release();
+	if(is_valid)	 RB_SIMPLE_SENDOR_TASK_TYPE::release();
 }
 
-void single_sendor::connet_to_server(log_handler*& log){
+void simple_sendor::connet_to_server(log_handler*& log){
 	if(is_valid){
 
-		rb_snd_log = log;
+		rb_simple_sendor_logger = log;
 
 		int max = cfg_.size();
 		for (int i = 0; i < max; i++) {
 
 			config::rb_sendor_cfg_value* p = cfg_[i];
 
-			if(p->type == config::RB_CFG_TYPE_P2P)
-				tg_.create_thread(bind(make_sendor_thr, p));
+			if(p->type == config::RB_CFG_TYPE_SIMPLE)
+				tg_.create_thread(bind(make_simple_sendor_thr, p));
 
 		}
 

@@ -51,7 +51,7 @@ public:
 	// otherwise return 0.
 	rb_sendor_cfg_value* get_by_key(string key);
 
-	// Get configuration information by key, return not-null pointer if success,
+	// Get configuration information by routingkey, return not-null pointer if success,
 	// otherwise return 0.
 	rb_sendor_cfg_value* get_by_routingkey(string routingkey);
 

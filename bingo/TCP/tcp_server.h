@@ -52,10 +52,7 @@ public:
 	void start_accept(){
 
 #ifdef BINGO_TCP_SERVER_DEBUG
-		std::stringstream stream;
-		stream << this_thread::get_id();
-		string id = stream.str();
-		message_out("thr:" << id << ",call start_accept()")
+		message_out_with_thread("call start_accept()")
 #endif
 
 		// Make new tcp_svr_handler object.
@@ -77,10 +74,7 @@ private:
 		{
 
 #ifdef BINGO_TCP_SERVER_DEBUG
-			std::stringstream stream;
-			stream << this_thread::get_id();
-			string id = stream.str();
-			message_out("thr:" << id << ",call accept_handler()")
+			message_out_with_thread("call accept_handler()")
 #endif
 
 			// Call accept_handle_success_func()
@@ -119,7 +113,7 @@ private:
 	void authentication_handler(const system::error_code& ec){
 		if(!ec){
 #ifdef BINGO_TCP_SERVER_DEBUG
-			message_out_with_time("start: check_authentication_pass")
+			message_out_with_thread("start: check_authentication_pass")
 #endif
 			SOCKET_MANAGER::instance()->check_authentication_pass();
 			check_authentication();
@@ -139,7 +133,7 @@ private:
 	void heartjump_handler(const system::error_code& ec){
 		if(!ec){
 #ifdef BINGO_TCP_SERVER_DEBUG
-			message_out_with_time("start: check_heartjump")
+			message_out_with_thread("start: check_heartjump")
 #endif
 			SOCKET_MANAGER::instance()->check_heartjump();
 			check_heartjump();

@@ -17,6 +17,7 @@ public:
 	file_logger_no_postfix(const char* directory, const char* filename);
 	virtual ~file_logger_no_postfix();
 
+protected:
 	void get_filename_postfix(string& filename);
 };
 

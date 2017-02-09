@@ -13,8 +13,9 @@
 namespace bingo { namespace RabbitMQ { namespace config {
 
 enum rb_cfg_type {
-	RB_CFG_TYPE_P2P											= 0x01,
-	RB_CFG_TYPE_PUBLISH_AND_SUBSCRIBE		= 0x02,
+	RB_CFG_TYPE_SIMPLE									= 0x01,
+	RB_CFG_TYPE_WORKER									= 0x02,
+	RB_CFG_TYPE_PUBLISH_AND_SUBSCRIBE		= 0x03,
 };
 struct rb_cfg_value {
 	string ip;

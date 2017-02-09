@@ -1,5 +1,5 @@
 /*
- * singlereceiver.cpp
+ * simple_receiver.cpp
  *
  *  Created on: 2016-9-2
  *      Author: root
@@ -7,11 +7,11 @@
 
 #include "../visitor/asiohandler.h"
 
-#include "single_receiver.h"
+#include "simple_receiver.h"
 
 using namespace bingo::RabbitMQ::handlers;
 
-single_receiver::single_receiver() : rb_receiver() {
+simple_receiver::simple_receiver() : rb_receiver() {
 	// TODO Auto-generated constructor stub
 	is_valid = cfg_.read_xml();
 	if(!is_valid) {
@@ -19,11 +19,11 @@ single_receiver::single_receiver() : rb_receiver() {
 	}
 }
 
-single_receiver::~single_receiver() {
+simple_receiver::~simple_receiver() {
 	// TODO Auto-generated destructor stub
 }
 
-void single_receiver::connet_to_server(log_handler*& log){
+void simple_receiver::connet_to_server(log_handler*& log){
 
 	if(is_valid){
 		while(true){

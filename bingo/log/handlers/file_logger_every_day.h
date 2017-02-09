@@ -31,6 +31,7 @@ public:
 	file_logger_every_day(const char* directory, const char* filename);
 	virtual ~file_logger_every_day();
 
+protected:
 	// Override logger::log_out() method.
 	void log_out(string& msg);
 

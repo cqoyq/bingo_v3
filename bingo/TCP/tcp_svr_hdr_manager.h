@@ -36,6 +36,19 @@ public:
 	tcp_svr_hdr_manager() : tcp_handler_manager<HANDLER>(){}
 	virtual ~tcp_svr_hdr_manager(){}
 
+	// Send actively heart-beat to all client.
+	void send_heartjump(){
+		// lock part field.
+		mutex::scoped_lock lock(this->mu_);
+
+		foreach_(tcp_handler_data& n, this->sets_){
+			HANDLER* p = static_cast<HANDLER*>(n.handler_pointer);
+			if(p){
+				p->send_heartjump_in_thread();
+			}
+		}
+	}
+
 	// Check whether tcp_handler is heartjump timeout.
 	void check_heartjump(){
 

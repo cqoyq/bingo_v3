@@ -1,12 +1,12 @@
 /*
- * single_receiver.h
+ * simple_receiver.h
  *
  *  Created on: 2016-9-2
  *      Author: root
  */
 
-#ifndef BINGO_RABBITMQ_HANDLERS_SINGLE_RECEIVER_H_
-#define BINGO_RABBITMQ_HANDLERS_SINGLE_RECEIVER_H_
+#ifndef BINGO_RABBITMQ_HANDLERS_SIMPLE_RECEIVER_H_
+#define BINGO_RABBITMQ_HANDLERS_SIMPLE_RECEIVER_H_
 
 #include "bingo/log/log_handler.h"
 using namespace bingo::log;
@@ -17,10 +17,10 @@ using namespace bingo::RabbitMQ;
 
 namespace bingo { namespace RabbitMQ { namespace handlers {
 
-class single_receiver : public rb_receiver {
+class simple_receiver : public rb_receiver {
 public:
-	single_receiver();
-	virtual ~single_receiver();
+	simple_receiver();
+	virtual ~simple_receiver();
 
 	// Override receiver::connet_to_server() method.
 	void connet_to_server(log_handler*& log);
@@ -32,4 +32,4 @@ private:
 
 } } }
 
-#endif /* BINGO_RABBITMQ_HANDLERS_SINGLE_RECEIVER_H_ */
+#endif /* BINGO_RABBITMQ_HANDLERS_SIMPLE_RECEIVER_H_ */

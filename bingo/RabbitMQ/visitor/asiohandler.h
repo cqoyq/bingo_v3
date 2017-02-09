@@ -42,9 +42,7 @@ private:
     virtual void onClosed(AMQP::Connection *connection);
 
     void doConnect(const std::string& host, uint16_t port);
-
     void doRead();
-
     void doWrite();
 
     void parseData();

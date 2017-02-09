@@ -21,15 +21,14 @@ public:
 	rabbitmq_factory();
 	virtual ~rabbitmq_factory();
 
-	// Create sendor object, if success then return true, otherwise return false.
+	// Create simple sendor object, if success then return true, otherwise return false.
 	// when return false, call err() to check error.
-	// call this method in single thread.
-	bool make_p2p_sendor(log_handler*& log);
+	// call this method in alone thread.
+	bool make_simple_sendor(log_handler*& log);
 
-	// Create receiver object, if success then return true, otherwise return false.
-	// when return false, call err() to check error.
-	// call this method in single thread.
-	bool make_p2p_receiver(log_handler*& log, rb_receiver::rev_callback f);
+	// Create simple receiver object, if success then return true, otherwise return false.
+	// call this method in alone thread.
+	bool make_simple_receiver(log_handler*& log, rb_receiver::rev_callback f);
 
 
 

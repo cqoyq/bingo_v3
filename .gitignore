@@ -5,7 +5,9 @@
 /*.so
 /mytest
 /log*
-/*w.xml
+/*.xml
+/logs/*
+/nbproject/*
 /bingo/*.o
 /bingo/*/*.o
 /bingo/*/*/*.o

@@ -21,7 +21,7 @@ public:
 	virtual ~log_factory();
 
 	// Create local logger, return true if success, fail to call err() to check error.
-	bool make_local_logger();
+	bool make_local_logger(const char* config_file = "./cfg.xml");
 
 	// Create rabbitmq logger, return true if success, fail to call err() to check error.
 	bool make_rabbitmq_logger(rabbitmq_factory* factory);

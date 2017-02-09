@@ -42,7 +42,7 @@ public:
 	// Read xml configuration file.
 	// return true if success, cfg::value is configuration information. if the return is false,
 	// call cfg::err() to check error.
-	bool read_xml();
+	bool read_xml(const char* config_file);
 
 	// Returned error message.
 	error_what& err();

@@ -1,12 +1,12 @@
 /*
- * single_sendor.h
+ * simple_sendor.h
  *
  *  Created on: 2016-9-2
  *      Author: root
  */
 
-#ifndef BINGO_RABBITMQ_HANDLERS_SINGLE_SENDOR_H_
-#define BINGO_RABBITMQ_HANDLERS_SINGLE_SENDOR_H_
+#ifndef BINGO_RABBITMQ_HANDLERS_SIMPLE_SENDOR_H_
+#define BINGO_RABBITMQ_HANDLERS_SIMPLE_SENDOR_H_
 
 #include "bingo/singleton.h"
 #include "bingo/error_what.h"
@@ -20,10 +20,10 @@ using namespace bingo::RabbitMQ;
 
 namespace bingo { namespace RabbitMQ { namespace handlers {
 
-class single_sendor : public rb_sendor {
+class simple_sendor : public rb_sendor {
 public:
-	single_sendor();
-	virtual ~single_sendor();
+	simple_sendor();
+	virtual ~simple_sendor();
 
 	// Override sendor::connet_to_server() method.
 	void connet_to_server(log_handler*& log);
@@ -32,7 +32,7 @@ public:
 	void transfer_data_by_key(string& key, char*& in, size_t& in_size);
 
 	// Override sendor::transfer_data_by_routingkey() method.
-	void transfer_data_by_routingkey(string& key, char*& in, size_t& in_size);
+	void transfer_data_by_routingkey(string& routingkey, char*& in, size_t& in_size);
 
 protected:
 	// The @msg value is 'map_key + message_body'.
@@ -47,4 +47,4 @@ private:
 
 } } }
 
-#endif /* BINGO_RABBITMQ_HANDLERS_SINGLE_SENDOR_H_ */
+#endif /* BINGO_RABBITMQ_HANDLERS_SIMPLE_SENDOR_H_ */

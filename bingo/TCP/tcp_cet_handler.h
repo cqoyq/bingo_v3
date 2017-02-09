@@ -50,7 +50,7 @@ public:
 
 	virtual ~tcp_cet_handler(){
 #ifdef BINGO_TCP_CLIENT_DEBUG
-		message_out_with_time("hdr:" << this << ",destory!");
+		message_out_with_thread("hdr:" << this << ",destory!");
 #endif
 	}
 

@@ -29,8 +29,8 @@ local_cfg::~local_cfg() {
 	// TODO Auto-generated destructor stub
 }
 
-bool local_cfg::read_xml(){
-	if(!xml_.read("./cfg.xml")){
+bool local_cfg::read_xml(const char* config_file){
+	if(!xml_.read(config_file)){
 		xml_.err().clone(err_);
 		err_.err_no(ERROR_TYPE_LOG_READ_CFG_FAIL);
 		return false;

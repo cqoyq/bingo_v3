@@ -22,6 +22,7 @@ public:
 	file_logger_every_hour(const char* directory, const char* filename);
 	virtual ~file_logger_every_hour();
 
+protected:
 	// Override file_logger_every_day::get_filename_postfix() method.
 	void get_filename_postfix(string& filename);
 };

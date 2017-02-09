@@ -43,7 +43,7 @@ public:
 
 	void level(log_level v);
 
-public:
+protected:
 	virtual void log_out(string& msg){};
 
 protected:

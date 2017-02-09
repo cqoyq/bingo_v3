@@ -30,7 +30,7 @@ public:
    virtual ~local_log_visitor();
    
    // Read configuration information ,fail and return false, then call err().
-   bool read_config();
+   bool read_config(const char* config_file);
 
    // Get error information.
    error_what& err();

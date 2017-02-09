@@ -28,8 +28,8 @@ bingo::error_what& local_log_visitor::err(){
 	return e_what_;
 }
 
-bool local_log_visitor::read_config(){
-	if(config_.read_xml()){
+bool local_log_visitor::read_config(const char* config_file){
+	if(config_.read_xml(config_file)){
 
 		string d = config_.value.path.c_str();
 		string f  = config_.value.filename.c_str();

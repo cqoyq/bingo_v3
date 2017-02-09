@@ -62,26 +62,33 @@ bool xml_parser::get_attr(const char* pt_path, const char* attrname, string& out
 
 	bool is_find = false;
 
-	pt::ptree pt = pt_.get_child(pt_path);
-	foreach_(pt::ptree::value_type &v1, pt){
-		 if(v1.first == "<xmlattr>"){
-			 foreach_(pt::ptree::value_type &vAttr, v1.second){
-				 if(vAttr.first.compare(attrname) == 0){
-					 out_value = vAttr.second.data();
-					 is_find = true;
-					 break;
+	try{
+		pt::ptree pt = pt_.get_child(pt_path);
+		foreach_(pt::ptree::value_type &v1, pt){
+			 if(v1.first == "<xmlattr>"){
+				 foreach_(pt::ptree::value_type &vAttr, v1.second){
+					 if(vAttr.first.compare(attrname) == 0){
+						 out_value = vAttr.second.data();
+						 is_find = true;
+						 break;
+					 }
 				 }
+				 if(is_find) break;
 			 }
-			 if(is_find) break;
-		 }
+		}
+		if(!is_find) {
+			e_what_.err_no(ERROR_TYPE_CONFIG_GET_ATTRIBUTE_FAIL);
+			e_what_.err_message("attribute no exist!");
+			return false;
+		}else
+			return true;
 	}
-	if(!is_find) {
-		e_what_.err_no(ERROR_TYPE_CONFIG_GET_ATTRIBUTE_FAIL);
-		e_what_.err_message("attribute no exist!");
-		return false;
-	}else
-		return true;
+	catch(boost::exception& e){
+		e_what_.err_no(ERROR_TYPE_CONFIG_GET_NODE_FAIL);
+		e_what_.err_message(current_exception_cast<std::exception>()->what());
 
+		return false;
+	}
 }
 
 node* xml_parser::get_node(const char* pt_path){

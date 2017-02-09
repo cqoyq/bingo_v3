@@ -55,6 +55,11 @@ private:
 	// Call the function when connect in handler again.
 	void reconnect(){
 		retry_delay_ = PARSER::retry_delay_seconds;
+
+		// If retry_delay_seconds is 0, then don't reconnect.
+		if(retry_delay_ == 0)
+			return;
+
 		start_connect();
 	}
 

@@ -51,7 +51,7 @@ public:
 
 	virtual ~tcp_svr_handler(){
 #ifdef BINGO_TCP_SERVER_DEBUG
-		message_out("handler:" << this << ",destory!");
+		message_out_with_thread("handler:" << this << ",destory!");
 #endif
 	}
 
@@ -95,7 +95,7 @@ public:
 			ptime p1 = now - seconds(PARSER::max_wait_for_heartjump_seconds);
 
 #ifdef BINGO_TCP_SERVER_DEBUG
-			message_out("check heartjump time, p1_:" << to_iso_extended_string(p1_) <<
+			message_out_with_thread("check heartjump time, p1_:" << to_iso_extended_string(p1_) <<
 					",p1:" << to_iso_extended_string(p1) <<
 					",p1_< p1:" << (p1_ < p1) <<
 					",hdr:" << this);
@@ -118,7 +118,7 @@ public:
 		p1_ = boost::posix_time::microsec_clock::local_time();
 
 #ifdef BINGO_TCP_SERVER_DEBUG
-		message_out("set heartjump time:" << to_iso_extended_string(p1_) << ",hdr:" << this);
+		message_out_with_thread("set heartjump time:" << to_iso_extended_string(p1_) << ",hdr:" << this);
 #endif
 	}
 
@@ -158,6 +158,10 @@ public:
 
 
 
+	void send_heartjump_in_thread(){
+		ios_.post(bind(&tcp_svr_handler::active_send_heartjump, this->shared_from_this()));
+	}
+
 	void send_data_in_thread(char*& sdata, size_t& sdata_size){
 
 		error_what e_what;
@@ -166,7 +170,7 @@ public:
 		// Malloc send buffer.
 		if(malloc_snd_buffer(sdata, sdata_size, new_data, e_what) == 0){
 
-			ios_.post(bind(&tcp_svr_handler::active_send, this->shared_from_this(), new_data));
+			ios_.post(bind(&tcp_svr_handler::active_send_data, this->shared_from_this(), new_data));
 		}else{
 
 			catch_error(e_what);
@@ -183,13 +187,15 @@ public:
 		ios_.post(bind(&tcp_svr_handler::active_close, this->shared_from_this()));
 	}
 
-	void active_send(package*& pk){
+
+
+	void active_send_data(package*& pk){
 
 		if(is_valid_){
 
 
 			error_what e_what;
-			if(active_send_in_ioservice_func(this->shared_from_this(), pk, e_what) == -1){
+			if(active_send_data_in_ioservice_func(this->shared_from_this(), pk, e_what) == -1){
 
 				catch_error(e_what);
 
@@ -209,6 +215,12 @@ public:
 		}else{
 
 			free_snd_buffer(pk);
+		}
+	}
+
+	void active_send_heartjump(){
+		if(is_valid_){
+			active_send_heartjump_in_ioservice_func(this->shared_from_this());
 		}
 	}
 
@@ -426,7 +438,7 @@ protected:
 		p2_ = boost::posix_time::microsec_clock::local_time();
 
 #ifdef BINGO_TCP_SERVER_DEBUG
-		message_out("set authentication pass time:" << to_iso_extended_string(p2_) << ",hdr:" << this);
+		message_out_with_thread("set authentication pass time:" << to_iso_extended_string(p2_) << ",hdr:" << this);
 #endif
 	}
 
@@ -465,12 +477,16 @@ public:
 
 	}
 
-	virtual int active_send_in_ioservice_func(
+	virtual int active_send_data_in_ioservice_func(
 			pointer /*p*/,
 			package*& /*pk*/,
 			error_what& /*e_what*/){
 
 		return 0;
+	}
+
+	virtual void active_send_heartjump_in_ioservice_func(pointer /*p*/){
+		return ;
 	}
 
 protected:

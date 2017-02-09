@@ -23,11 +23,11 @@ log_factory::~log_factory() {
 	if(hdr_) delete hdr_;
 }
 
-bool log_factory::make_local_logger(){
+bool log_factory::make_local_logger(const char* config_file){
 	local_log_visitor* p = new local_log_visitor();
 	hdr_ = p;
 
-	if(!p->read_config()){
+	if(!p->read_config(config_file)){
 		p->err().clone(e_what_);
 		return false;
 	}else{

@@ -62,7 +62,14 @@ bool rb_sendor_cfg::check_node(){
 	for (int i = 0; i <max; i++) {
 		bingo::configuration::node* item = list->child[i];
 
-		string s_key, s_ip, s_port, s_username, s_pwd, s_host, s_exchange, s_routingkey;
+		string s_key;
+		string s_ip;
+		string s_port;
+		string s_username;
+		string s_pwd;
+		string s_host;
+		string s_exchange;
+		string s_routingkey;
 		int n_type = 0;
 
 		// type
@@ -79,9 +86,9 @@ bool rb_sendor_cfg::check_node(){
 		}else
 			s_key = item->attrs["key"]->value;
 
-		// key-length, max size is 20.
+		// key-length, max size is 40.
 		if(s_key.length() > RABBITMQ_MAPKEY_MAX_SIZE){
-			err_.err_message("size of key is more than 20!");
+			err_.err_message("size of key is more than 40!");
 			return false;
 		}
 
@@ -146,7 +153,6 @@ bool rb_sendor_cfg::check_node(){
 		v->map_key = s_key.c_str();
 		v->type = (rb_cfg_type)n_type;
 
-
 		this->value_.insert(s_key, v);
 	}
 	return true;
@@ -160,8 +166,8 @@ rb_sendor_cfg_value* rb_sendor_cfg::get_by_key(string key){
 }
 
 rb_sendor_cfg_value* rb_sendor_cfg::get_by_routingkey(string routingkey){
-	typedef boost::ptr_map<string, rb_sendor_cfg_value>::iterator MYITER;
-	MYITER iter = value_.begin();
+	typedef boost::ptr_map<string, rb_sendor_cfg_value>::iterator my_iter;
+	my_iter iter = value_.begin();
 	while(iter != value_.end()){
 		if((*iter).second->routingkey.compare(routingkey.c_str()) == 0){
 			return (*iter).second;

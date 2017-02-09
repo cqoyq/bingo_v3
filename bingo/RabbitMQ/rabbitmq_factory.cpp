@@ -5,8 +5,8 @@
  *      Author: root
  */
 
-#include "handlers/single_sendor.h"
-#include "handlers/single_receiver.h"
+#include "handlers/simple_sendor.h"
+#include "handlers/simple_receiver.h"
 using namespace bingo::RabbitMQ::handlers;
 #include "bingo/error_what.h"
 
@@ -28,10 +28,10 @@ rabbitmq_factory::~rabbitmq_factory() {
 }
 
 
-bool rabbitmq_factory::make_p2p_sendor(log_handler*& log){
+bool rabbitmq_factory::make_simple_sendor(log_handler*& log){
 	logger_ = log;
 
-	single_sendor* p=  new single_sendor();
+	simple_sendor* p=  new simple_sendor();
 	snd_ = p;
 	if(!snd_->is_valid){
 		e_what_.err_no(ERROR_TYPE_RABBITMQ_MAKE_SINGLE_SENDOR_FAIL);
@@ -50,24 +50,10 @@ bool rabbitmq_factory::make_p2p_sendor(log_handler*& log){
 	return snd_->is_valid;
 }
 
-void rabbitmq_factory::transfer_data_by_key(string& key, char* data, size_t data_size){
-	if(snd_)
-		snd_->transfer_data_by_key(key, data, data_size);
-}
-
-void rabbitmq_factory::transfer_data_by_routingkey(string& routingkey, char* data, size_t data_size){
-	if(snd_)
-		snd_->transfer_data_by_routingkey(routingkey, data, data_size);
-}
-
-error_what& rabbitmq_factory::err(){
-	return e_what_;
-}
-
-bool rabbitmq_factory::make_p2p_receiver(log_handler*& log, rb_receiver::rev_callback f){
+bool rabbitmq_factory::make_simple_receiver(log_handler*& log, rb_receiver::rev_callback f){
 	logger_ = log;
 
-	single_receiver* p = new single_receiver();
+	simple_receiver* p = new simple_receiver();
 	rev_ =p;
 	if(!rev_->is_valid){
 		e_what_.err_no(ERROR_TYPE_RABBITMQ_MAKE_SINGLE_RECEIVER_FAIL);
@@ -88,5 +74,24 @@ bool rabbitmq_factory::make_p2p_receiver(log_handler*& log, rb_receiver::rev_cal
 	}
 	return rev_->is_valid;
 }
+
+
+error_what& rabbitmq_factory::err(){
+	return e_what_;
+}
+
+
+void rabbitmq_factory::transfer_data_by_key(string& key, char* data, size_t data_size){
+	if(snd_)
+		snd_->transfer_data_by_key(key, data, data_size);
+}
+
+void rabbitmq_factory::transfer_data_by_routingkey(string& routingkey, char* data, size_t data_size){
+	if(snd_)
+		snd_->transfer_data_by_routingkey(routingkey, data, data_size);
+}
+
+
+
 
 
