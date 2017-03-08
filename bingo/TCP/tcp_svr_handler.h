@@ -45,7 +45,7 @@ public:
 		  package_size_(sizeof(TCP_MESSAGE_PACKAGE)){
 
 		set_heartjump_datetime();
-
+                                           set_active_heartjump_datetime();
 		set_authentication_pass_datetime();
 	}
 
@@ -60,6 +60,9 @@ public:
 	}
 
 	void start(){
+            
+                                          // Set active heart-jump start to time.
+                                          set_active_heartjump_datetime();
 
 		// Set authentication start to time.
 		set_authentication_pass_datetime();
@@ -123,6 +126,11 @@ public:
 	}
 
 
+                    // Call this to update p3_.
+                    void set_active_heartjump_datetime(){
+                        p3_ = boost::posix_time::microsec_clock::local_time();
+                    }
+        
 
 	// Call this from tcp_handler_manager.
 	bool check_authentication_pass(){
@@ -499,6 +507,7 @@ protected:
 	size_t package_size_;
 
 	ptime p1_;						// Save heart jump datetime.
+                     ptime p3_;                                                                                                                              // Save active heart jump datetime.
 
 	ptime p2_;						// Save authentication pass datetime.
 	bool is_authentication_pass_;   // When authentication pass, this is true, default is false.

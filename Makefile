@@ -91,7 +91,8 @@ OBJS =  main.o \
 		test/tcp/test_client_t2.o \
 		test/tcp/test_client_t3.o \
 		test/tcp/test_client_t4.o \
-		test/tcp/test_client_t5.o
+		test/tcp/test_client_t5.o \
+		test/rabbitmq/test_simple.o
 
 
 ############# SO source file ############# 		
