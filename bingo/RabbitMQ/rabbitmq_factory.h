@@ -31,9 +31,15 @@ public:
 	bool make_simple_receiver(log_handler*& log, rb_receiver::rev_callback f);
 
 
+        
+                     // Create work sendor object,    
+                     bool make_work_sendor(log_handler*& log);
+                     
+                     // Create work receiver object, 
+                     bool make_work_receiver(log_handler*& log, rb_receiver::rev_callback f);
 
 
-
+                     
 	// Create fail, to show error information.
 	error_what& err();
 

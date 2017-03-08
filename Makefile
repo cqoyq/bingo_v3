@@ -59,6 +59,7 @@ OBJS =  main.o \
 		bingo/RabbitMQ/handlers/simple_sendor.o \
 		bingo/RabbitMQ/handlers/simple_receiver.o \
 		bingo/RabbitMQ/handlers/work_sendor.o \
+		bingo/RabbitMQ/handlers/work_receiver.o \
 		bingo/TCP/config/sendor_cfg.o \
 		bingo/TCP/config/receiver_cfg.o \
 		test/test_string_ex.o \
@@ -92,7 +93,8 @@ OBJS =  main.o \
 		test/tcp/test_client_t3.o \
 		test/tcp/test_client_t4.o \
 		test/tcp/test_client_t5.o \
-		test/rabbitmq/test_simple.o
+		test/rabbitmq/test_simple.o \
+		test/rabbitmq/test_work.o
 
 
 ############# SO source file ############# 		
@@ -128,6 +130,7 @@ CPPS = bingo/string.cpp \
 		bingo/RabbitMQ/handlers/simple_sendor.cpp \
 		bingo/RabbitMQ/handlers/simple_receiver.cpp \
 		bingo/RabbitMQ/handlers/work_sendor.cpp \
+		bingo/RabbitMQ/handlers/work_receiver.cpp \
 		bingo/TCP/config/sendor_cfg.cpp \
 		bingo/TCP/config/receiver_cfg.cpp
 		

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+	<local_log_visitor>
+		<type>every_day</type>	     
+		<filename>log</filename>		     
+		<path>./logs</path>					     
+		<level>debug</level>					
+	</local_log_visitor>
+</application>
