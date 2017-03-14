@@ -15,34 +15,50 @@ using namespace bingo::configuration::xml;
 
 #include "rb_cfg_value.h"
 
-namespace bingo { namespace RabbitMQ { namespace config {
+namespace bingo {
+        namespace RabbitMQ {
+                namespace config {
 
-class rb_recevier_cfg {
-public:
-	rb_recevier_cfg();
-	virtual ~rb_recevier_cfg();
+                        class rb_recevier_cfg {
+                        public:
+                                rb_recevier_cfg();
+                                virtual ~rb_recevier_cfg();
 
-	// Read xml configuration file.
-	// return true if success, cfg::value is configuration information. if the return is false,
-	// call cfg::err_msg() to check error.
-	bool read_xml();
+                                // Read xml configuration file.
+                                // return true if success, cfg::value is configuration information. if the return is false,
+                                // call cfg::err_msg() to check error.
+                                bool read_xml();
 
-	// Returned error message.
-	error_what& err();
+                                // Returned error message.
+                                error_what& err();
 
-	// Whether read configuration success, to success then return true;
-	bool is_valid;
+                                // Whether read configuration success, to success then return true;
+                                bool is_valid;
 
-	// Configuration value object.
-	rb_cfg_value value;
-private:
-	error_what err_;
-	xml_parser xml_;
+                                // Configuration value object.
+                                rb_cfg_value value;
+                        protected:
+                                error_what err_;
+                                xml_parser xml_;
 
-	// Check node is valid in cfg.xml.
-	bool check_node();
-};
+                                // Check node is valid in cfg.xml.
+                                virtual bool check_node();
+                        };
 
-} } }
+                        class rb_routing_recevier_cfg : public  rb_recevier_cfg  {
+                        public:
+                                rb_routing_recevier_cfg();
+                                virtual ~rb_routing_recevier_cfg();
+
+                                // Routingkey set
+                                std::vector<string> routingkeyset;
+
+                        protected:
+                                bool check_node();
+                        };
+
+                }
+        }
+}
 
 #endif /* BINGO_RABBITMQ_CONFIG_RB_RECEIVER_CFG_H_ */

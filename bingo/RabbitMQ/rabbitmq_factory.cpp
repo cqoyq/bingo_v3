@@ -9,7 +9,11 @@
 #include "handlers/simple_receiver.h"
 #include "handlers/work_sendor.h"
 #include "handlers/work_receiver.h"
-using namespace bingo::RabbitMQ::handlers;
+#include "handlers/publish_sendor.h"
+#include "handlers/publish_receiver.h"
+#include "handlers/routing_sendor.h"
+#include "handlers/routing_receiver.h"
+using namespace bingo::RabbitMQ::handlers; 
 #include "bingo/error_what.h"
 
 #include "rabbitmq_factory.h"
@@ -127,6 +131,103 @@ bool rabbitmq_factory::make_work_receiver(log_handler*& log, rb_receiver::rev_ca
 }
 
 
+
+
+bool rabbitmq_factory::make_publish_sendor(log_handler*& log){
+	logger_ = log;
+
+	publish_sendor* p=  new publish_sendor();
+	snd_ = p;
+	if(!snd_->is_valid){
+		e_what_.err_no(ERROR_TYPE_RABBITMQ_MAKE_PUBLISH_SENDOR_FAIL);
+		e_what_.err_message(p->err().err_message().c_str());
+
+		if(logger_){
+
+			string s_msg = "work sendor fail!, error:" + e_what_.err_message();
+			logger_->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_PUBLISH_SENDOR_ERROR,  s_msg);
+		}
+	}
+	else{
+		// Connect to MQ server.
+		snd_->connet_to_server(logger_);
+	}
+	return snd_->is_valid;
+}
+
+bool rabbitmq_factory::make_publish_receiver(log_handler*& log, rb_receiver::rev_callback f){
+	logger_ = log;
+
+	publish_receiver* p = new publish_receiver();
+	rev_ =p;
+	if(!rev_->is_valid){
+		e_what_.err_no(ERROR_TYPE_RABBITMQ_MAKE_PUBLISH_RECEIVER_FAIL);
+		e_what_.err_message(p->err().err_message().c_str());
+
+		if(logger_){
+
+			string s_msg = "make single receiver fail!, error:" + e_what_.err_message();
+			logger_->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_PUBLISH_RECEIVER_ERROR,  s_msg);
+		}
+	}
+	else{
+		// Set callback function.
+		rev_->callback(f);
+
+		// Connect to MQ server.
+		rev_->connet_to_server(logger_);
+	}
+	return rev_->is_valid;
+}
+
+
+
+bool rabbitmq_factory::make_routing_sendor(log_handler*& log){
+	logger_ = log;
+
+	routing_sendor* p=  new routing_sendor();
+	snd_ = p;
+	if(!snd_->is_valid){
+		e_what_.err_no(ERROR_TYPE_RABBITMQ_MAKE_ROUTING_SENDOR_FAIL);
+		e_what_.err_message(p->err().err_message().c_str());
+
+		if(logger_){
+
+			string s_msg = "work sendor fail!, error:" + e_what_.err_message();
+			logger_->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_ROUTING_SENDOR_ERROR,  s_msg);
+		}
+	}
+	else{
+		// Connect to MQ server.
+		snd_->connet_to_server(logger_);
+	}
+	return snd_->is_valid;
+}
+
+bool rabbitmq_factory::make_routing_receiver(log_handler*& log, rb_receiver::rev_callback f){
+	logger_ = log;
+
+	routing_receiver* p = new routing_receiver(); 
+	rev_ =p;
+	if(!rev_->is_valid){
+		e_what_.err_no(ERROR_TYPE_RABBITMQ_MAKE_ROUTING_RECEIVER_FAIL);
+		e_what_.err_message(p->err().err_message().c_str());
+
+		if(logger_){
+
+			string s_msg = "make single receiver fail!, error:" + e_what_.err_message();
+			logger_->handle(bingo::log::LOG_LEVEL_ERROR,  RABBITMQ_ROUTING_RECEIVER_ERROR,  s_msg);
+		}
+	}
+	else{
+		// Set callback function.
+		rev_->callback(f);
+
+		// Connect to MQ server.
+		rev_->connet_to_server(logger_);
+	}
+	return rev_->is_valid;
+}
 
 
 

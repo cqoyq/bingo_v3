@@ -37,6 +37,23 @@ public:
                      
                      // Create work receiver object, 
                      bool make_work_receiver(log_handler*& log, rb_receiver::rev_callback f);
+                     
+                     
+                     
+                      // Create Publish-Subscribe sendor object,    
+                     bool make_publish_sendor(log_handler*& log);
+                     
+                     // Create Publish-Subscribe receiver object, 
+                     bool make_publish_receiver(log_handler*& log, rb_receiver::rev_callback f);
+                     
+                     
+                     
+                     
+                     // Create routing sendor object,    
+                     bool make_routing_sendor(log_handler*& log);
+                     
+                     // Create routing receiver object, 
+                     bool make_routing_receiver(log_handler*& log, rb_receiver::rev_callback f);
 
 
                      

@@ -19,59 +19,123 @@ using namespace bingo::configuration::xml;
 #include <boost/ptr_container/ptr_map.hpp>
 using namespace boost;
 
-namespace bingo { namespace RabbitMQ { namespace config {
+namespace bingo {
+        namespace RabbitMQ {
+                namespace config {
 
-struct rb_sendor_cfg_value : public rb_cfg_value {
-	rb_sendor_cfg_value(){
-		channel = 0;
-	}
-	virtual ~rb_sendor_cfg_value(){}
+                        struct rb_sendor_cfg_value : public rb_cfg_value {
 
-	string				 map_key;
-	AMQP::Channel* channel;
-};
+                                rb_sendor_cfg_value() {
+                                        channel = 0;
+                                }
 
-class rb_sendor_cfg {
-public:
-	rb_sendor_cfg();
-	virtual ~rb_sendor_cfg();
+                                virtual ~rb_sendor_cfg_value() {
+                                }
 
-	// Read xml configuration file.
-	// return true if success, cfg::value is configuration information. if the return is false,
-	// call cfg::err_msg() to check error.
-	bool read_xml();
+                                string map_key;
+                                AMQP::Channel* channel;
+                        };
 
-	// Returned error message.
-	error_what& err();
+                        class rb_sendor_cfg {
+                        public:
+                                rb_sendor_cfg();
+                                virtual ~rb_sendor_cfg();
 
-	// Whether read configuration success, to success then return true;
-	bool is_valid;
+                                // Read xml configuration file.
+                                // return true if success, cfg::value is configuration information. if the return is false,
+                                // call cfg::err_msg() to check error.
+                                bool read_xml();
 
-	// Get configuration information by key, return not-null pointer if success,
-	// otherwise return 0.
-	rb_sendor_cfg_value* get_by_key(string key);
+                                // Returned error message.
+                                error_what& err();
 
-	// Get configuration information by routingkey, return not-null pointer if success,
-	// otherwise return 0.
-	rb_sendor_cfg_value* get_by_routingkey(string routingkey);
+                                // Whether read configuration success, to success then return true;
+                                bool is_valid;
 
-	// Return map size.
-	int size();
+                                // Get configuration information by key, return not-null pointer if success,
+                                // otherwise return 0.
+                                rb_sendor_cfg_value* get_by_key(string key);
 
-	// Get item by [], if @index > map max size, then return 0;
-	rb_sendor_cfg_value* operator[](int index);
+                                // Get configuration information by routingkey, return not-null pointer if success,
+                                // otherwise return 0.
+                                rb_sendor_cfg_value* get_by_routingkey(string routingkey);
 
-private:
-	error_what err_;
-	xml_parser xml_;
+                                // Return map size.
+                                int size();
 
-	// Check node is valid in cfg.xml.
-	bool check_node();
+                                // Get item by [], if @index > map max size, then return 0;
+                                rb_sendor_cfg_value* operator[](int index);
 
-	// Configuration value object.
-	boost::ptr_map<string, rb_sendor_cfg_value>  value_;
-};
+                                // Get item by [], if @index > map max size, then return 0;
+                                rb_sendor_cfg_value* at(int index);
 
-} } }
+                        protected:
+                                error_what err_;
+                                xml_parser xml_;
+
+                                // Check node is valid in cfg.xml.
+                                bool check_node();
+
+                                // Configuration value object.
+                                boost::ptr_map<string, rb_sendor_cfg_value> value_;
+                        };
+
+                        struct rb_routing_sendor_cfg_value : public rb_cfg_value {
+
+                                rb_routing_sendor_cfg_value() {
+                                        channel = 0;
+                                }
+
+                                virtual ~rb_routing_sendor_cfg_value() {
+                                        routingkeyset.clear();
+                                }
+
+                                AMQP::Channel* channel;
+                                std::vector<pair<string, string>> routingkeyset; // Value is routingkey, Key is mapkey.
+                        };
+
+                        class rb_routing_sendor_cfg {
+                        public:
+                                rb_routing_sendor_cfg();
+                                virtual ~rb_routing_sendor_cfg();
+
+                                // Read xml configuration file.
+                                // return true if success, cfg::value is configuration information. if the return is false,
+                                // call cfg::err_msg() to check error.
+                                bool read_xml();
+
+                                // Returned error message.
+                                error_what& err();
+
+                                // Whether read configuration success, to success then return true;
+                                bool is_valid;
+
+                                // Get configuration information by key, return not-null pointer if success,
+                                // otherwise return 0.
+                                rb_routing_sendor_cfg_value* get_by_key(string key);
+
+                                // Get key map to routingkey value.
+                                string map_to_routingkey(string key);
+
+                                // Return map size.
+                                int size();
+
+                                // Get item by [], if @index > map max size, then return 0;
+                                rb_routing_sendor_cfg_value* operator[](int index);
+
+                        protected:
+                                error_what err_;
+                                xml_parser xml_;
+
+                                // Check node is valid in cfg.xml.
+                                bool check_node();
+
+                                // Configuration value object.
+                                boost::ptr_vector<rb_routing_sendor_cfg_value> value_;
+                        };
+
+                }
+        }
+}
 
 #endif /* BINGO_RABBITMQ_CONFIG_RB_SENDOR_CFG_H_ */

@@ -270,7 +270,7 @@ void AsioHandler::doWrite()
                 {
 #ifdef BINGO_MQ_DEBUG
                 	 // Log output.
-					string info = "send data to server!data_size:";
+					string info = "send data to server!data_size:"; 
 					info.append(lexical_cast<string>(length));
 					 log_out(bingo::log::LOG_LEVEL_DEBUG, info.c_str());
 #endif

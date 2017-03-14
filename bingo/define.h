@@ -24,7 +24,7 @@ namespace bingo {
 #define message_out(str) cout << str << endl;
 #define message_out_with_time(str) { \
 		ptime p1 = second_clock::local_time(); \
-		cout << str << ", time:" << to_iso_extended_string(p1) << endl; \
+		cout  << to_iso_extended_string(p1) << "," << str << endl; \
 		}
 
 }
@@ -41,6 +41,14 @@ namespace bingo {
 #define RABBITMQ_WORK_SENDOR_INFO                                                                                                                           "rabbitmq_work_sendor_info"
 #define RABBITMQ_WORK_RECEIVER_ERROR                                                                                                                   "rabbitmq_work_receiver_error"
 #define RABBITMQ_WORK_RECEIVER_INFO                                                                                                                        "rabbitmq_work_receiver_info"
+#define RABBITMQ_PUBLISH_SENDOR_ERROR                                                                                                                "rabbitmq_publish_sendor_error"
+#define RABBITMQ_PUBLISH_SENDOR_INFO                                                                                                                     "rabbitmq_publish_sendor_info"
+#define RABBITMQ_PUBLISH_RECEIVER_ERROR                                                                                                              "rabbitmq_publish_receiver_error"
+#define RABBITMQ_PUBLISH_RECEIVER_INFO                                                                                                                  "rabbitmq_publish_receiver_info"
+#define RABBITMQ_ROUTING_SENDOR_ERROR                                                                                                              "rabbitmq_routing_sendor_error"
+#define RABBITMQ_ROUTING_SENDOR_INFO                                                                                                                   "rabbitmq_routing_sendor_info"
+#define RABBITMQ_ROUTING_RECEIVER_ERROR                                                                                                            "rabbitmq_routing_receiver_error"
+#define RABBITMQ_ROUTING_RECEIVER_INFO                                                                                                                 "rabbitmq_routing_receiver_info"
 
 
 

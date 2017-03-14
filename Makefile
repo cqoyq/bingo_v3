@@ -60,6 +60,10 @@ OBJS =  main.o \
 		bingo/RabbitMQ/handlers/simple_receiver.o \
 		bingo/RabbitMQ/handlers/work_sendor.o \
 		bingo/RabbitMQ/handlers/work_receiver.o \
+		bingo/RabbitMQ/handlers/publish_sendor.o \
+		bingo/RabbitMQ/handlers/publish_receiver.o \
+		bingo/RabbitMQ/handlers/routing_sendor.o \
+		bingo/RabbitMQ/handlers/routing_receiver.o \
 		bingo/TCP/config/sendor_cfg.o \
 		bingo/TCP/config/receiver_cfg.o \
 		test/test_string_ex.o \
@@ -94,7 +98,9 @@ OBJS =  main.o \
 		test/tcp/test_client_t4.o \
 		test/tcp/test_client_t5.o \
 		test/rabbitmq/test_simple.o \
-		test/rabbitmq/test_work.o
+		test/rabbitmq/test_work.o \
+		test/rabbitmq/test_publish.o \
+		test/rabbitmq/test_routing.o
 
 
 ############# SO source file ############# 		
@@ -131,6 +137,10 @@ CPPS = bingo/string.cpp \
 		bingo/RabbitMQ/handlers/simple_receiver.cpp \
 		bingo/RabbitMQ/handlers/work_sendor.cpp \
 		bingo/RabbitMQ/handlers/work_receiver.cpp \
+		bingo/RabbitMQ/handlers/publish_sendor.cpp \
+		bingo/RabbitMQ/handlers/publish_receiver.cpp \
+		bingo/RabbitMQ/handlers/routing_sendor.cpp \
+		bingo/RabbitMQ/handlers/routing_receiver.cpp \
 		bingo/TCP/config/sendor_cfg.cpp \
 		bingo/TCP/config/receiver_cfg.cpp
 		
@@ -172,6 +182,13 @@ else
 DEBUG_PROCESS_TASK =
 endif
 
+# debug_rabbitmq
+ifeq ($(debug_rabbitmq),y)
+DEBUG_MQ = -DBINGO_MQ_DEBUG
+else
+DEBUG_MQ =
+endif
+
 # define_sart_message_type
 ifeq ($(define_sart_message_type),y)
 DEFINE_SART_MESSAGE_TYPE = -DBINGO_SART_MESSAGE_TYPE
@@ -187,6 +204,7 @@ ifeq ($(findstring Test_Debug,$(ConfigName)),Test_Debug)
 									$(DEBUG_THREAD_TASK) \
 									$(DEBUG_PROCESS_TASK) \
 									$(DEBUG_MYSQL) \
+									$(DEBUG_MQ) \
 									$(DEFINE_SART_MESSAGE_TYPE)
 	TARGET = mytest
 else ifeq ($(findstring Lib_Debug,$(ConfigName)),Lib_Debug)
@@ -195,6 +213,7 @@ else ifeq ($(findstring Lib_Debug,$(ConfigName)),Lib_Debug)
 									$(DEBUG_THREAD_TASK) \
 									$(DEBUG_PROCESS_TASK) \
 									$(DEBUG_MYSQL) \
+									$(DEBUG_MQ) \
 									$(DEFINE_SART_MESSAGE_TYPE)
 	TARGET = libbingo_v3_d.so
 else ifeq ($(findstring Lib_Release,$(ConfigName)),Lib_Release)
