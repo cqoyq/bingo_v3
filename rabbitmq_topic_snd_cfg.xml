@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+    <rabbitmq_sendor>
+        <list>
+            <item type="5" ip="127.0.0.1" port="5672" username="guest" pwd="guest" host="/" exchange="test_topic_exchange">
+                <routingkey key="t1">test1.kernel</routingkey>
+                <routingkey key="t2">test1.core</routingkey>
+            </item>
+        </list>
+    </rabbitmq_sendor>
+</application>

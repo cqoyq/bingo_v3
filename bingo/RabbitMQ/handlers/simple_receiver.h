@@ -19,7 +19,7 @@ namespace bingo { namespace RabbitMQ { namespace handlers {
 
 class simple_receiver : public rb_receiver {
 public:
-	simple_receiver();
+	simple_receiver(const char* cfg_file);
 	virtual ~simple_receiver();
 
 	// Override receiver::connet_to_server() method.

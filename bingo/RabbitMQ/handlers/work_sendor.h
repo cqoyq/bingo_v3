@@ -22,7 +22,7 @@ namespace bingo { namespace RabbitMQ { namespace handlers {
 
 class work_sendor : public rb_sendor {
 public:
-	work_sendor();
+	work_sendor(const char* cfg_file);
 	virtual ~work_sendor();
 
 	// Override sendor::connet_to_server() method.

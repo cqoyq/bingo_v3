@@ -22,7 +22,7 @@ namespace bingo { namespace RabbitMQ { namespace handlers {
 
 class publish_sendor : public rb_sendor {
 public:
-	publish_sendor();
+	publish_sendor(const char* cfg_file);
 	virtual ~publish_sendor();
 
 	// Override sendor::connet_to_server() method.

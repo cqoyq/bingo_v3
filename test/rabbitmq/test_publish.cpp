@@ -66,7 +66,7 @@ void recv(std::string& msg){
 }
 
 BOOST_AUTO_TEST_CASE(t_receiver){
-    rabbitmq_factory factory;
+    rabbitmq_factory factory; 
     
     console_logger mylog;
     log_handler* logger = &mylog;

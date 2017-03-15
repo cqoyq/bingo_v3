@@ -5,8 +5,8 @@
  *      Author: root
  */
 
-#ifndef BINGO_RABBITMQ_HANDLERS_ROUTING_RECEIVER_H_
-#define BINGO_RABBITMQ_HANDLERS_ROUTING_RECEIVER_H_
+#ifndef BINGO_RABBITMQ_HANDLERS_TOPIC_RECEIVER_H_
+#define BINGO_RABBITMQ_HANDLERS_TOPIC_RECEIVER_H_
 
 #include "bingo/log/log_handler.h"
 using namespace bingo::log;
@@ -17,10 +17,10 @@ using namespace bingo::RabbitMQ;
 
 namespace bingo { namespace RabbitMQ { namespace handlers {
 
-class routing_receiver : public rb_receiver {
+class topic_receiver : public rb_receiver {
 public:
-	routing_receiver(const char* cfg_file);
-	virtual ~routing_receiver();
+	topic_receiver(const char* cfg_file);
+	virtual ~topic_receiver();
 
 	// Override receiver::connet_to_server() method.
 	void connet_to_server(log_handler*& log);
@@ -32,4 +32,4 @@ private:
 
 } } }
 
-#endif /* BINGO_RABBITMQ_HANDLERS_ROUTING_RECEIVER_H_ */
+#endif /* BINGO_RABBITMQ_HANDLERS_TOPIC_RECEIVER_H_ */

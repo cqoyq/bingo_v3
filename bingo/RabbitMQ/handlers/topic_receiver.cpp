@@ -1,5 +1,5 @@
 /*
- * routing_receiver.cpp
+ * topic_receiver.cpp
  *
  *  Created on: 2016-9-2
  *      Author: root
@@ -7,11 +7,11 @@
 
 #include "../visitor/asiohandler.h"
 
-#include "routing_receiver.h"
+#include "topic_receiver.h"
 
 using namespace bingo::RabbitMQ::handlers;
 
-routing_receiver::routing_receiver( const char* cfg_file ) : rb_receiver( ) {
+topic_receiver::topic_receiver( const char* cfg_file ) : rb_receiver( ) {
           // TODO Auto-generated constructor stub
           is_valid = cfg_.read_xml( cfg_file );
           if ( !is_valid ) {
@@ -19,11 +19,11 @@ routing_receiver::routing_receiver( const char* cfg_file ) : rb_receiver( ) {
           }
 }
 
-routing_receiver::~routing_receiver( ) {
+topic_receiver::~topic_receiver( ) {
           // TODO Auto-generated destructor stub
 }
 
-void routing_receiver::connet_to_server( log_handler*& log ) {
+void topic_receiver::connet_to_server( log_handler*& log ) {
 
           if ( is_valid ) {
                     while ( true ) {
@@ -49,7 +49,7 @@ void routing_receiver::connet_to_server( log_handler*& log ) {
                                       [&]( const std::string &name , int msgcount , int consumercount ) {
 
                                                 foreach_( string& n , cfg_.routingkeyset ) {
-                                                          channel.bindQueue( cfg_.value.exchange.c_str( ) , "" , n.c_str( ) );
+                                                          channel.bindQueue( cfg_.value.exchange.c_str( ) , name , n.c_str( ) );
                                                           channel.consume( name , AMQP::noack ).onReceived( receiveMessageCallback );
                                                 }
 
@@ -59,13 +59,13 @@ void routing_receiver::connet_to_server( log_handler*& log ) {
                                         channel.declareQueue( AMQP::exclusive ).onSuccess( callback );
                               };
 
-                              channel.declareExchange( cfg_.value.exchange.c_str( ) , AMQP::direct ).onSuccess( success );
+                              channel.declareExchange( cfg_.value.exchange.c_str( ) , AMQP::topic ).onSuccess( success );
 
                               ioService.run( );
 
                               if ( log ) {
                                         string s_msg = "ioService is exit!";
-                                        log->handle( bingo::log::LOG_LEVEL_INFO , RABBITMQ_ROUTING_RECEIVER_ERROR , s_msg );
+                                        log->handle( bingo::log::LOG_LEVEL_INFO , RABBITMQ_TOPIC_RECEIVER_ERROR , s_msg );
                               }
                     }
           }

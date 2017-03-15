@@ -5,8 +5,8 @@
  *      Author: root
  */
 
-#ifndef BINGO_RABBITMQ_HANDLERS_SIMPLE_SENDOR_H_
-#define BINGO_RABBITMQ_HANDLERS_SIMPLE_SENDOR_H_
+#ifndef BINGO_RABBITMQ_HANDLERS_TOPIC_SENDOR_H_
+#define BINGO_RABBITMQ_HANDLERS_TOPIC_SENDOR_H_
 
 #include "bingo/singleton.h"
 #include "bingo/error_what.h"
@@ -20,10 +20,10 @@ using namespace bingo::RabbitMQ;
 
 namespace bingo { namespace RabbitMQ { namespace handlers {
 
-class simple_sendor : public rb_sendor {
+class topic_sendor : public rb_sendor {
 public:
-	simple_sendor(const char* cfg_file);
-	virtual ~simple_sendor();
+	topic_sendor(const char* cfg_file);
+	virtual ~topic_sendor();
 
 	// Override sendor::connet_to_server() method.
 	void connet_to_server(log_handler*& log);
@@ -39,7 +39,7 @@ protected:
 	void rb_top(rb_data_message*& msg, bingo_empty_type&);
 
 private:
-	config::rb_sendor_cfg cfg_;
+	config::rb_topic_sendor_cfg cfg_;
 
 	// Sendor thread group.
 	thread_group tg_;
@@ -47,4 +47,4 @@ private:
 
 } } }
 
-#endif /* BINGO_RABBITMQ_HANDLERS_SIMPLE_SENDOR_H_ */
+#endif /* BINGO_RABBITMQ_HANDLERS_TOPIC_SENDOR_H_ */

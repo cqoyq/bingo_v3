@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <application>
-	<tcp_receiver>
-				<ip>0.0.0.0</ip>
-				<port>17015</port>
-	</tcp_receiver>
 	<rabbitmq_receiver>
                                                     <type>2</type>
 				<ip>127.0.0.1</ip>						
@@ -19,8 +15,4 @@
 					<item key="work" type="2" ip="127.0.0.1" port="5672" username="guest" pwd="guest" host="/" exchange="" routingkey="test_work"/>
 				</list>
 	</rabbitmq_sendor>
-	<rbmq_log_visitor>
-                        <rabbitmq_key>logger</rabbitmq_key>
-                        <log_level>debug</log_level>				
-	</rbmq_log_visitor>
 </application>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+    <rabbitmq_receiver>
+        <type>4</type>
+        <ip>127.0.0.1</ip>						
+        <port>5672</port>							
+        <username>guest</username>		
+        <pwd>guest</pwd>						
+        <host>/</host>
+        <exchange>test_routing_exchange</exchange>								
+        <routingkey>test2</routingkey>		
+    </rabbitmq_receiver>
+</application>

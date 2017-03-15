@@ -44,7 +44,7 @@ namespace bingo {
                                 // Read xml configuration file.
                                 // return true if success, cfg::value is configuration information. if the return is false,
                                 // call cfg::err_msg() to check error.
-                                bool read_xml();
+                                bool read_xml(const char* cfg_file);
 
                                 // Returned error message.
                                 error_what& err();
@@ -102,7 +102,7 @@ namespace bingo {
                                 // Read xml configuration file.
                                 // return true if success, cfg::value is configuration information. if the return is false,
                                 // call cfg::err_msg() to check error.
-                                bool read_xml();
+                                bool read_xml(const char* cfg_file);
 
                                 // Returned error message.
                                 error_what& err();
@@ -129,9 +129,20 @@ namespace bingo {
 
                                 // Check node is valid in cfg.xml.
                                 bool check_node();
+                                
+                                // Check <item>'s type attribute in cfg.xml.
+                                virtual bool check_rb_type(int type);
 
                                 // Configuration value object.
                                 boost::ptr_vector<rb_routing_sendor_cfg_value> value_;
+                        };
+                        
+                        class rb_topic_sendor_cfg : public rb_routing_sendor_cfg {
+                        public:
+                                  rb_topic_sendor_cfg();
+                                  virtual ~rb_topic_sendor_cfg();
+                        protected:
+                                  bool check_rb_type(int type);
                         };
 
                 }

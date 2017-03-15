@@ -20,7 +20,7 @@ using namespace boost;
 
 // Test one sendor and two receiver.
 
-BOOST_AUTO_TEST_SUITE( test_rabbitmq_routing )
+BOOST_AUTO_TEST_SUITE( test_rabbitmq_topic )
 
 class console_logger : public log_handler {
 public:
@@ -54,14 +54,14 @@ void run_sendor( rabbitmq_factory*& p ) {
 
 BOOST_AUTO_TEST_CASE( t_sendor ) {
           rabbitmq_factory factory;
-          factory.set_cfg( "rabbitmq_routing_snd_cfg.xml" );
+          factory.set_cfg( "rabbitmq_topic_snd_cfg.xml" );
 
           boost::thread t( run_sendor , &factory );
 
           console_logger mylog;
 
           log_handler* logger = &mylog;
-          factory.make_routing_sendor( logger );
+          factory.make_topic_sendor( logger );
 
           t.join( );
 
@@ -73,32 +73,31 @@ void recv( std::string& msg ) {
           message_out_with_time( "receive msg:" << msg );
 }
 
-// This receiver test1 and test2 message.
+// This receiver all message.
 BOOST_AUTO_TEST_CASE( t_receiver1 ) {
           rabbitmq_factory factory;
-          factory.set_cfg( "rabbitmq_routing_rev1_cfg.xml" );
+          factory.set_cfg( "rabbitmq_topic_rev1_cfg.xml" );
 
           console_logger mylog;
           log_handler* logger = &mylog;
 
-          factory.make_routing_receiver( logger , recv );
+          factory.make_topic_receiver( logger , recv );
 
           // output:
 }
 
-// This receiver test2 message.
+// This receiver *.core message.
 BOOST_AUTO_TEST_CASE( t_receiver2 ) {
           rabbitmq_factory factory;
-          factory.set_cfg( "rabbitmq_routing_rev2_cfg.xml" );
+          factory.set_cfg( "rabbitmq_topic_rev2_cfg.xml" );
 
           console_logger mylog;
           log_handler* logger = &mylog;
 
-          factory.make_routing_receiver( logger , recv );
+          factory.make_topic_receiver( logger , recv );
 
           // output:
 }
-
 
 BOOST_AUTO_TEST_SUITE_END( )
 

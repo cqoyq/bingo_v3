@@ -64,6 +64,8 @@ OBJS =  main.o \
 		bingo/RabbitMQ/handlers/publish_receiver.o \
 		bingo/RabbitMQ/handlers/routing_sendor.o \
 		bingo/RabbitMQ/handlers/routing_receiver.o \
+		bingo/RabbitMQ/handlers/topic_sendor.o \
+		bingo/RabbitMQ/handlers/topic_receiver.o \
 		bingo/TCP/config/sendor_cfg.o \
 		bingo/TCP/config/receiver_cfg.o \
 		test/test_string_ex.o \
@@ -100,7 +102,8 @@ OBJS =  main.o \
 		test/rabbitmq/test_simple.o \
 		test/rabbitmq/test_work.o \
 		test/rabbitmq/test_publish.o \
-		test/rabbitmq/test_routing.o
+		test/rabbitmq/test_routing.o \
+		test/rabbitmq/test_topic.o
 
 
 ############# SO source file ############# 		
@@ -141,6 +144,8 @@ CPPS = bingo/string.cpp \
 		bingo/RabbitMQ/handlers/publish_receiver.cpp \
 		bingo/RabbitMQ/handlers/routing_sendor.cpp \
 		bingo/RabbitMQ/handlers/routing_receiver.cpp \
+		bingo/RabbitMQ/handlers/topic_sendor.cpp \
+		bingo/RabbitMQ/handlers/topic_receiver.cpp \
 		bingo/TCP/config/sendor_cfg.cpp \
 		bingo/TCP/config/receiver_cfg.cpp
 		

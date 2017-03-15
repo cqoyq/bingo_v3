@@ -49,6 +49,10 @@ namespace bingo {
 #define RABBITMQ_ROUTING_SENDOR_INFO                                                                                                                   "rabbitmq_routing_sendor_info"
 #define RABBITMQ_ROUTING_RECEIVER_ERROR                                                                                                            "rabbitmq_routing_receiver_error"
 #define RABBITMQ_ROUTING_RECEIVER_INFO                                                                                                                 "rabbitmq_routing_receiver_info"
+#define RABBITMQ_TOPIC_SENDOR_ERROR                                                                                                                      "rabbitmq_topic_sendor_error"
+#define RABBITMQ_TOPIC_SENDOR_INFO                                                                                                                           "rabbitmq_topic_sendor_info"
+#define RABBITMQ_TOPIC_RECEIVER_ERROR                                                                                                                    "rabbitmq_topic_receiver_error"
+#define RABBITMQ_TOPIC_RECEIVER_INFO                                                                                                                        "rabbitmq_topic_receiver_info"
 
 
 
