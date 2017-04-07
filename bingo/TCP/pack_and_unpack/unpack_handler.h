@@ -16,21 +16,27 @@ using namespace std;
 #include "bingo/configuration/node.h"
 #include "net_layer.h"
 
-namespace bingo { namespace TCP { namespace pack_and_unpack {
+namespace bingo {
+          namespace TCP {
+                    namespace pack_and_unpack {
+                              
+                               template<typename T>
+                              class unpack_handler {
+                              public:
 
-class unpack_handler
-{
-public:
-	virtual ~unpack_handler(){};
-   /* Unpack stream to data.
-    * return 0 if success, otherwise return -1. */
-   virtual int handler(char*& in_data, size_t& in_data_size, net_layer*& in_net,  bingo::configuration::node*& out_data)=0;
+                                        virtual ~unpack_handler() {
+                                        };
+                                        /* Unpack stream to data.
+                                         * return 0 if success, otherwise return -1. */
+                                        virtual int handler(char*& in_data, size_t& in_data_size, T*& in_net, bingo::configuration::node*& out_data) = 0;
 
-protected:
-private:
+                              protected:
+                              private:
 
-};
+                              };
 
-}  }  }  /* BINGO_TCP_PACK_AND_UNPACK_UNPACK_HANDLER_H_ */
+                    }
+          }
+} /* BINGO_TCP_PACK_AND_UNPACK_UNPACK_HANDLER_H_ */
 
 #endif
