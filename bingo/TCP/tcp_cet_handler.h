@@ -25,482 +25,471 @@ using namespace boost::asio;
 #include <boost/date_time/posix_time/posix_time.hpp>
 using namespace boost::posix_time;
 
-namespace bingo { namespace TCP {
+namespace bingo {
+        namespace TCP {
 
-template<typename HEARTJUMP,
-		 typename PARSER,
-		 typename TCP_MESSAGE_PACKAGE
-		>
-class tcp_cet_handler
-	: public boost::enable_shared_from_this<tcp_cet_handler<HEARTJUMP, PARSER, TCP_MESSAGE_PACKAGE> >{
-public:
-	typedef boost::shared_ptr<tcp_cet_handler> pointer;
-	typedef mem_guard<TCP_MESSAGE_PACKAGE> package;
+                template<typename HEARTJUMP , typename PARSER , typename TCP_MESSAGE_PACKAGE>
+                class tcp_cet_handler
+                : public boost::enable_shared_from_this<tcp_cet_handler<HEARTJUMP , PARSER , TCP_MESSAGE_PACKAGE> > {
+                public:
+                        typedef boost::shared_ptr<tcp_cet_handler> pointer;
+                        typedef mem_guard<TCP_MESSAGE_PACKAGE> package;
 
-	tcp_cet_handler(boost::asio::io_service& io_service,
-			boost::function<void()> f						// reconnect func
-	)
-		: ios_(io_service),
-		  socket_(io_service),
-		  timer_(io_service),
-		  is_valid_(true),
-		  package_size_(sizeof(TCP_MESSAGE_PACKAGE)),
-		  f_(f){
-	}
-
-	virtual ~tcp_cet_handler(){
+                        // Construct and destruct
+                        tcp_cet_handler( boost::asio::io_service& io_service ,
+                                boost::function<void( ) > f // reconnect func
+                                )
+                        : ios_( io_service ) ,
+                        socket_( io_service ) ,
+                        timer_( io_service ) ,
+                        is_valid_( true ) ,
+                        package_size_( sizeof (TCP_MESSAGE_PACKAGE ) ) ,
+                        f_( f ) {
+                        }
+                        virtual ~tcp_cet_handler( ) {
 #ifdef BINGO_TCP_CLIENT_DEBUG
-		message_out_with_thread("hdr:" << this << ",destory!");
+                                message_out_with_thread( "hdr:" << this << ",destory!" );
 #endif
-	}
+                        }
+                        ip::tcp::socket& socket( ) {
+                                return socket_;
+                        }
+
+                        // Start to connect to server.
+                        void start( ) {
+
+                                package* pk = new package( );
+                                error_what e_what;
+                                if (make_first_sended_package_func( pk , e_what ) == 0) {
+
+                                        // If pk have no data, then start to asyc-read.
+                                        if (pk->length( ) == 0) {
+
+                                                free_snd_buffer( pk );
+
+                                                // Start async read data, read finish to call read_handler().
+                                                boost::asio::async_read( socket_ ,
+                                                        boost::asio::buffer( rev_mgr_.current( ) , PARSER::header_size ) ,
+                                                        boost::bind( &tcp_cet_handler::read_handler ,
+                                                        this->shared_from_this( ) ,
+                                                        boost::asio::placeholders::error ,
+                                                        boost::asio::placeholders::bytes_transferred ,
+                                                        PARSER::header_size ) );
+                                        } else {
+                                                boost::asio::async_write( socket_ ,
+                                                        buffer( pk->header( ) , pk->length( ) ) ,
+                                                        boost::bind( &tcp_cet_handler::write_first_handler ,
+                                                        this->shared_from_this( ) ,
+                                                        boost::asio::placeholders::error ,
+                                                        boost::asio::placeholders::bytes_transferred ,
+                                                        pk ) );
+                                        }
+
+                                        // Start to send heartjump package
+                                        schedule_timer( );
+
+                                } else {
 
-	ip::tcp::socket& socket(){
-		return socket_;
-	}
+                                        free_snd_buffer( pk );
+
+                                        // Throw exception, err_code is error_tcp_client_close_socket_because_make_first_package.
+                                        catch_error( e_what );
 
-	void start(){
+                                        close_socket( );
+                                        close_completed( 0 );
+                                }
 
-		package* pk = new package();
-		error_what e_what;
-		if(make_first_sended_package_func(pk, e_what) == 0){
 
-			// If pk have no data, then start to asyc-read.
-			if(pk->length() == 0){
+                        }
 
-				free_snd_buffer(pk);
+                        // Close socket.
+                        void close_socket( ) {
+                                // This function is used to close the socket. Any asynchronous send, receive
+                                // or connect operations will be cancelled immediately, and will complete
+                                // with the boost::asio::error::operation_aborted error.
+                                socket_.close( );
+                        }
 
-				// Start async read data, read finish to call read_handler().
-				boost::asio::async_read(socket_,
-						boost::asio::buffer(rev_mgr_.current(), PARSER::header_size),
-						boost::bind(&tcp_cet_handler::read_handler,
-									this->shared_from_this(),
-									boost::asio::placeholders::error,
-									boost::asio::placeholders::bytes_transferred,
-									PARSER::header_size));
-			}else{
-				boost::asio::async_write(socket_,
-						buffer(pk->header(), pk->length()),
-						boost::bind(&tcp_cet_handler::write_first_handler,
-								this->shared_from_this(),
-								boost::asio::placeholders::error,
-								boost::asio::placeholders::bytes_transferred,
-								pk));
-			}
+                        // Catch error information.
+                        void catch_error( error_what& e_what ) {
+                                catch_error_func( this->shared_from_this( ) , e_what );
+                        }
 
-			// Start to send heartjump package
-			schedule_timer();
+                        // These method will been called in thread. 
+                        void send_data_in_thread( char*& sdata , size_t& sdata_size ) {
 
-		}else{
+                                error_what e_what;
+                                package* new_data = 0;
 
-			free_snd_buffer(pk);
+                                // Malloc send buffer.
+                                if (malloc_snd_buffer( sdata , sdata_size , new_data , e_what ) == 0) {
+
+                                        ios_.post( bind( &tcp_cet_handler::active_send , this->shared_from_this( ) , new_data ) );
+                                } else {
 
-			// Throw exception, err_code is error_tcp_client_close_socket_because_make_first_package.
-			catch_error(e_what);
+                                        send_close_in_thread( e_what );
+                                }
 
-			close_socket();
-			close_completed(0);
-		}
 
+                        }
+                        void send_close_in_thread( error_what& e_what ) {
+                                error_what* p_err = new error_what( );
+                                e_what.clone( *p_err );
+                                ios_.post( bind( &tcp_cet_handler::active_close , this->shared_from_this( ) , p_err ) );
+                        }
 
-	}
+                protected:
+                        // Reconnect to server.
+                        void reconnet( ) {
+                                f_( );
+                        }
 
+                        // Call the method after receive data.
+                        void read_handler( const boost::system::error_code& ec ,
+                                size_t bytes_transferred ,
+                                size_t bytes_requested ) {
 
-	void close_socket(){
-		// This function is used to close the socket. Any asynchronous send, receive
-		// or connect operations will be cancelled immediately, and will complete
-		// with the boost::asio::error::operation_aborted error.
-		socket_.close();
-	}
+                                if (!is_valid_)
+                                        return;
 
-	void catch_error(error_what& e_what){
-		catch_error_func(this->shared_from_this(), e_what);
-	}
+                                // Check error.
+                                if (ec) {
+                                        close( ec );
+                                        return;
+                                }
 
+                                // Set mblk's reader data length, and move rd_ptr().
+                                error_what e_what;
+                                if (rev_mgr_.change_length( bytes_transferred , e_what ) == -1) {
 
+                                        e_what.err_no( ERROR_TYPE_TCP_PACKAGE_REV_MESSAGE_EXCEED_MAX_SIZE );
+                                        e_what.err_message( "receive message is more than max size!" );
+                                        catch_error( e_what );
 
-	void send_data_in_thread(char*& sdata, size_t& sdata_size){
+                                        close_socket( );
+                                        close_completed( ec.value( ) );
 
-		error_what e_what;
-		package* new_data = 0;
+                                        return;
+                                }
 
-		// Malloc send buffer.
-		if(malloc_snd_buffer(sdata, sdata_size, new_data, e_what) == 0){
+                                if (bytes_transferred < bytes_requested) {
 
-			ios_.post(bind(&tcp_cet_handler::active_send, this->shared_from_this(), new_data));
-		}else{
+                                        // Continue read remain data.
+                                        size_t remain = bytes_requested - bytes_transferred;
 
-			catch_error(e_what);
+                                        boost::asio::async_read( socket_ ,
+                                                buffer( rev_mgr_.current( ) , remain ) ,
+                                                bind( &tcp_cet_handler::read_handler ,
+                                                this->shared_from_this( ) ,
+                                                boost::asio::placeholders::error ,
+                                                boost::asio::placeholders::bytes_transferred ,
+                                                remain ) );
 
-			send_close_in_thread();
-		}
+                                } else if (rev_mgr_.length( ) == PARSER::header_size) {
 
+                                        size_t remain = 0;
 
-	}
+                                        char* p = rev_mgr_.header( );
+                                        if (read_pk_header_complete_func(
+                                                this->shared_from_this( ) , p , rev_mgr_.length( ) , remain , e_what ) == -1) {
 
-	void send_close_in_thread(){
+                                                // Throw error, and err_code is error_tcp_package_header_is_wrong.
+                                                catch_error( e_what );
 
-		ios_.post(bind(&tcp_cet_handler::active_close, this->shared_from_this()));
-	}
+                                                close_socket( );
+                                                close_completed( ec.value( ) );
 
-protected:
+                                                return;
+                                        }
 
-	void reconnet(){
-		f_();
-	}
+                                        // Check whether remain size is valid.
+                                        if (!rev_mgr_.check_block_remain_space( remain )) {
 
+                                                e_what.err_no( ERROR_TYPE_TCP_PACKAGE_REV_MESSAGE_EXCEED_MAX_SIZE );
+                                                e_what.err_message( "receive message is more than max size!" );
+                                                catch_error( e_what );
 
+                                                close_socket( );
+                                                close_completed( ec.value( ) );
 
-	void read_handler(const boost::system::error_code& ec,
-				size_t bytes_transferred,
-				size_t bytes_requested){
+                                                return;
+                                        }
 
-		if(!is_valid_)
-			return;
+                                        // Continue read remain data.
+                                        boost::asio::async_read( socket_ ,
+                                                buffer( rev_mgr_.current( ) , remain ) ,
+                                                bind( &tcp_cet_handler::read_handler ,
+                                                this->shared_from_this( ) ,
+                                                boost::asio::placeholders::error ,
+                                                boost::asio::placeholders::bytes_transferred ,
+                                                remain ) );
 
-		// Check error.
-		if(ec)
-		{
-			close(ec);
-			return;
-		}
 
-		// Set mblk's reader data length, and move rd_ptr().
-		error_what e_what;
-		if( rev_mgr_.change_length(bytes_transferred, e_what) == -1){
+                                } else {
+                                        // finish to recevie Message block.
 
-			e_what.err_no(ERROR_TYPE_TCP_PACKAGE_REV_MESSAGE_EXCEED_MAX_SIZE);
-			e_what.err_message("receive message is more than max size!");
-			catch_error(e_what);
+                                        char* p = rev_mgr_.header( );
+                                        if (read_pk_full_complete_func(
+                                                this->shared_from_this( ) , p , rev_mgr_.length( ) , e_what ) == -1) {
 
-			close_socket();
-			close_completed(ec.value());
+                                                //  Throw error, and err_code is error_tcp_package_body_is_wrong.
+                                                catch_error( e_what );
 
-			return;
-		}
+                                                close_socket( );
+                                                close_completed( ec.value( ) );
 
-		if(bytes_transferred < bytes_requested){
+                                                return;
+                                        }
 
-			// Continue read remain data.
-			size_t remain = bytes_requested - bytes_transferred;
+                                        rev_mgr_.clear( );
 
-			boost::asio::async_read(socket_,
-					buffer(rev_mgr_.current(), remain),
-					bind(&tcp_cet_handler::read_handler,
-							this->shared_from_this(),
-							boost::asio::placeholders::error,
-							boost::asio::placeholders::bytes_transferred,
-							remain));
+                                        // Start new async read data.
+                                        boost::asio::async_read( socket_ ,
+                                                boost::asio::buffer( rev_mgr_.current( ) , PARSER::header_size ) ,
+                                                boost::bind( &tcp_cet_handler::read_handler ,
+                                                this->shared_from_this( ) ,
+                                                boost::asio::placeholders::error ,
+                                                boost::asio::placeholders::bytes_transferred ,
+                                                PARSER::header_size ) );
+                                }
+                        }
 
-		}else if (rev_mgr_.length() == PARSER::header_size){
+                        // Call the method after connect to server success and send first data success.
+                        void write_first_handler( const boost::system::error_code& ec ,
+                                size_t bytes_transferred ,
+                                package*& pk ) {
 
-			size_t remain = 0;
+                                char* p = pk->header( );
+                                write_pk_full_complete_func( this->shared_from_this( ) , p , bytes_transferred , ec );
 
-			char* p = rev_mgr_.header();
-			if(read_pk_header_complete_func(
-					this->shared_from_this(), p, rev_mgr_.length(), remain, e_what) == -1){
 
-				// Throw error, and err_code is error_tcp_package_header_is_wrong.
-				catch_error(e_what);
+                                free_snd_buffer( pk );
 
-				close_socket();
-				close_completed(ec.value());
+                                // Start async read data, read finish to call read_handler().
+                                boost::asio::async_read( socket_ ,
+                                        boost::asio::buffer( rev_mgr_.current( ) , PARSER::header_size ) ,
+                                        boost::bind( &tcp_cet_handler::read_handler ,
+                                        this->shared_from_this( ) ,
+                                        boost::asio::placeholders::error ,
+                                        boost::asio::placeholders::bytes_transferred ,
+                                        PARSER::header_size ) );
+                        }
 
-				return;
-			}
+                        // Call the method after receive data.
+                        void write_handler( const boost::system::error_code& ec ,
+                                size_t bytes_transferred ,
+                                package*& pk ) {
 
-			// Check whether remain size is valid.
-			if(!rev_mgr_.check_block_remain_space(remain)){
+                                char* p = pk->header( );
+                                write_pk_full_complete_func( this->shared_from_this( ) , p , bytes_transferred , ec );
 
-				e_what.err_no(ERROR_TYPE_TCP_PACKAGE_REV_MESSAGE_EXCEED_MAX_SIZE);
-				e_what.err_message("receive message is more than max size!");
-				catch_error(e_what);
+                                free_snd_buffer( pk );
 
-				close_socket();
-				close_completed(ec.value());
+                        }
 
-				return;
-			}
+                        // The method will been called in ios thread after call send_data_in_thread().
+                        void active_send( package*& pk ) {
 
-			// Continue read remain data.
-			boost::asio::async_read(socket_,
-					buffer(rev_mgr_.current(), remain),
-					bind(&tcp_cet_handler::read_handler,
-							this->shared_from_this(),
-							boost::asio::placeholders::error,
-							boost::asio::placeholders::bytes_transferred,
-							remain));
+                                if (is_valid_) {
 
 
-		}else{
-			// finish to recevie Message block.
+                                        error_what e_what;
+                                        if (active_send_in_ioservice_func( this->shared_from_this( ) , pk , e_what ) == -1) {
 
-			char* p = rev_mgr_.header();
-			if(read_pk_full_complete_func(
-					this->shared_from_this(), p, rev_mgr_.length(), e_what) == -1){
+                                                catch_error( e_what );
 
-				//  Throw error, and err_code is error_tcp_package_body_is_wrong.
-				catch_error(e_what);
+                                                free_snd_buffer( pk );
 
-				close_socket();
-				close_completed(ec.value());
+                                                return;
+                                        }
 
-				return;
-			}
+                                        boost::asio::async_write( socket_ ,
+                                                buffer( pk->header( ) , pk->length( ) ) ,
+                                                boost::bind( &tcp_cet_handler::write_handler ,
+                                                this->shared_from_this( ) ,
+                                                boost::asio::placeholders::error ,
+                                                boost::asio::placeholders::bytes_transferred ,
+                                                pk ) );
 
-			rev_mgr_.clear();
+                                } else {
 
-			// Start new async read data.
-			boost::asio::async_read(socket_,
-						boost::asio::buffer(rev_mgr_.current(), PARSER::header_size),
-						boost::bind(&tcp_cet_handler::read_handler,
-									this->shared_from_this(),
-									boost::asio::placeholders::error,
-									boost::asio::placeholders::bytes_transferred,
-									PARSER::header_size));
-		}
-	}
+                                        free_snd_buffer( pk );
+                                }
+                        }
 
-	void write_first_handler(const boost::system::error_code& ec,
-				size_t bytes_transferred,
-				package*& pk){
+                        // The method will been called in ios thread after call send_close_in_thread().
+                        void active_close( error_what*& e_what ) {
 
-		char* p =  pk->header();
-		write_pk_full_complete_func(this->shared_from_this(), p, bytes_transferred, ec);
+                                if (is_valid_) {
+                                        //                                        error_what e_what;
+                                        //                                        e_what.err_no( ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_CLIENT );
+                                        //                                        e_what.err_message( "tcp client socket active close!" );
 
+                                        catch_error( *e_what );
+                                        close_socket( );
+                                        close_completed( 0 );
+                                }
 
-		free_snd_buffer(pk);
+                                delete e_what;
+                        }
 
-		// Start async read data, read finish to call read_handler().
-		boost::asio::async_read(socket_,
-				boost::asio::buffer(rev_mgr_.current(), PARSER::header_size),
-				boost::bind(&tcp_cet_handler::read_handler,
-							this->shared_from_this(),
-							boost::asio::placeholders::error,
-							boost::asio::placeholders::bytes_transferred,
-							PARSER::header_size));
-	}
+                        // The method will been called in inner.
+                        void close( const boost::system::error_code& ec ) {
 
-	void write_handler(const boost::system::error_code& ec,
-			size_t bytes_transferred,
-			package*& pk){
+                                using namespace boost::system::errc;
+                                if (ec.value( ) != operation_canceled) {
 
-		char* p =  pk->header();
-		write_pk_full_complete_func(this->shared_from_this(), p, bytes_transferred, ec);
+                                        error_what e_what;
+                                        e_what.err_no( ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_SERVER );
+                                        e_what.err_message( "tcp client socket is been closed by server!" );
 
-		free_snd_buffer(pk);
+                                        catch_error( e_what );
 
-	}
+                                        // Passive close
+                                        close_socket( );
+                                }
 
+                                close_completed( ec.value( ) );
+                        }
 
-	void active_send(package*& pk){
+                        // Clean something after socket close, and reconnect.
+                        void close_completed( int ec_value ) {
 
-		if(is_valid_){
+                                is_valid_ = false;
 
+                                close_complete_func( this->shared_from_this( ) , ec_value );
 
-			error_what e_what;
-			if(active_send_in_ioservice_func(this->shared_from_this(), pk, e_what) == -1){
+                                // Start to reconnet.
+                                reconnet( );
+                        }
 
-				catch_error(e_what);
+                        // Malloc package space.
+                        int malloc_snd_buffer( char*& ori_data ,
+                                size_t& ori_data_size ,
+                                package*& pk ,
+                                error_what& e_what ) {
 
-				free_snd_buffer(pk);
+                                if (ori_data_size > package_size_) {
+                                        e_what.err_no( ERROR_TYPE_TCP_PACKAGE_SND_MESSAGE_EXCEED_MAX_SIZE );
+                                        e_what.err_message( "tcp send message is more than max size!" );
+                                        return -1;
+                                }
 
-				return;
-			}
+                                pk = new package( );
+                                pk->copy( ori_data , ori_data_size , e_what );
 
-			boost::asio::async_write(socket_,
-					buffer(pk->header(), pk->length()),
-					boost::bind(&tcp_cet_handler::write_handler,
-							this->shared_from_this(),
-							boost::asio::placeholders::error,
-							boost::asio::placeholders::bytes_transferred,
-							pk));
+                                return 0;
+                        }
 
-		}else{
+                        // Free package space.
+                        void free_snd_buffer( package*& pk ) {
 
-			free_snd_buffer(pk);
-		}
-	}
+                                delete pk;
+                                pk = 0;
+                        }
 
-	void active_close(){
+                        // Schedule active heartjump timer.
+                        void schedule_timer( ) {
 
-		if(is_valid_){
-			error_what e_what;
-			e_what.err_no(ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_CLIENT);
-			e_what.err_message("tcp client socket active close!");
+                                // If max_interval_seconds_on_heartjump is 0, then don't send heartjump.
+                                if (PARSER::max_interval_seconds_on_heartjump > 0) {
+                                        seconds s( PARSER::max_interval_seconds_on_heartjump );
+                                        time_duration td = s;
 
-			catch_error(e_what);
+                                        timer_.expires_from_now( td );
+                                        timer_.async_wait( bind( &tcp_cet_handler::time_out_handler , this ,
+                                                boost::asio::placeholders::error ) );
+                                }
+                        }
 
-			close_socket();
-		}
-	}
+                        // The callback active heartjump.
+                        void time_out_handler( const system::error_code& ec ) {
+                                if (!ec) {
 
+                                        error_what e_what;
+                                        package* pk = 0;
+                                        char* p = &HEARTJUMP::data[0];
+                                        if (malloc_snd_buffer( p , HEARTJUMP::data_size , pk , e_what ) == 0) {
 
+                                                // Send heartjump
+                                                boost::asio::async_write( socket_ ,
+                                                        buffer( pk->header( ) , pk->length( ) ) ,
+                                                        boost::bind( &tcp_cet_handler::write_handler ,
+                                                        this->shared_from_this( ) ,
+                                                        boost::asio::placeholders::error ,
+                                                        boost::asio::placeholders::bytes_transferred ,
+                                                        pk ) );
 
+                                                seconds s( PARSER::max_interval_seconds_on_heartjump );
+                                                time_duration td = s;
 
-	void close(const boost::system::error_code& ec){
+                                                timer_.expires_from_now( td );
+                                                timer_.async_wait( bind( &tcp_cet_handler::time_out_handler , this ,
+                                                        boost::asio::placeholders::error ) );
+                                        }
+                                }
+                        }
 
-		using namespace boost::system::errc;
-		if(ec.value() != operation_canceled){
+                public:
+                        virtual void catch_error_func( pointer /*p*/ , error_what& /*e_what*/ ) {
 
-			error_what e_what;
-			e_what.err_no(ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_SERVER);
-			e_what.err_message("tcp client socket is been closed by server!");
+                        }
+                        virtual void close_complete_func( pointer /*p*/ , int& /*ec_value*/ ) {
 
-			catch_error(e_what);
+                        }
+                        virtual int read_pk_header_complete_func(
+                                pointer /*p*/ ,
+                                char*& /*rev_data*/ ,
+                                size_t& /*rev_data_size*/ ,
+                                size_t& /*remain_size*/ ,
+                                error_what& /*e_what*/ ) {
 
-			// Passive close
-			close_socket();
-		}
+                                return 0;
+                        }
+                        virtual int read_pk_full_complete_func(
+                                pointer /*p*/ ,
+                                char*& /*rev_data*/ ,
+                                size_t& /*rev_data_size*/ ,
+                                error_what& /*e_what*/ ) {
+                                return 0;
+                        }
+                        virtual void write_pk_full_complete_func(
+                                pointer /*p*/ ,
+                                char*& /*snd_p*/ ,
+                                size_t& /*snd_size*/ ,
+                                const boost::system::error_code& /*ec*/ ) {
 
-		close_completed(ec.value());
-	}
+                        }
+                        virtual int active_send_in_ioservice_func( pointer /*p*/ , package*& /*pk*/ , error_what& /*e_what*/ ) {
 
-	void close_completed(int ec_value){
+                                return 0;
+                        }
+                        virtual int make_first_sended_package_func( package*& /*pk*/ , error_what& /*e_what*/ ) {
 
-		is_valid_ = false;
+                                return 0;
+                        }
 
-		close_complete_func(this->shared_from_this(), ec_value);
+                protected:
+                        boost::asio::io_service& ios_;
+                        ip::tcp::socket socket_;
 
-		// Start to reconnet.
-		reconnet();
-	}
+                        bool is_valid_;
 
+                        package rev_mgr_;
+                        size_t package_size_;
 
 
+                        boost::function<void( ) > f_;
 
+                        deadline_timer timer_; //  Active heartjump timer.
 
+                        enum {
+                                CLOSE_COMPLETED_EC_TYPE_MAKE_FIRST_PACKAGE_FAIL = 0x01 ,
+                        };
+                };
 
-	int malloc_snd_buffer(char*& ori_data,
-			size_t& ori_data_size,
-			package*& pk,
-			error_what& e_what){
-
-		if(ori_data_size > package_size_){
-			e_what.err_no(ERROR_TYPE_TCP_PACKAGE_SND_MESSAGE_EXCEED_MAX_SIZE);
-			e_what.err_message("tcp send message is more than max size!");
-			return -1;
-		}
-
-		pk = new package();
-		pk->copy(ori_data, ori_data_size, e_what);
-
-		return 0;
-	}
-
-	void free_snd_buffer(package*& pk){
-
-		delete pk;
-		pk = 0;
-	}
-
-
-
-
-	void schedule_timer(){
-
-		// If max_interval_seconds_on_heartjump is 0, then don't send heartjump.
-		if(PARSER::max_interval_seconds_on_heartjump > 0){
-			seconds s(PARSER::max_interval_seconds_on_heartjump);
-			time_duration td = s;
-
-			timer_.expires_from_now(td);
-			timer_.async_wait(bind(&tcp_cet_handler::time_out_handler, this,
-					boost::asio::placeholders::error));
-		}
-	}
-
-	void time_out_handler(const system::error_code& ec){
-		if(!ec){
-
-			error_what e_what;
-			package* pk = 0;
-			char* p = &HEARTJUMP::data[0];
-			if(malloc_snd_buffer(p, HEARTJUMP::data_size, pk, e_what) == 0){
-
-				// Send heartjump
-				boost::asio::async_write(socket_,
-						buffer(pk->header(), pk->length()),
-						boost::bind(&tcp_cet_handler::write_handler,
-								this->shared_from_this(),
-								boost::asio::placeholders::error,
-								boost::asio::placeholders::bytes_transferred,
-								pk));
-
-				seconds s(PARSER::max_interval_seconds_on_heartjump);
-				time_duration td = s;
-
-				timer_.expires_from_now(td);
-				timer_.async_wait(bind(&tcp_cet_handler::time_out_handler, this,
-						boost::asio::placeholders::error));
-			}
-		}
-	}
-
-public:
-	virtual void catch_error_func(pointer /*p*/, error_what& /*e_what*/){
-
-	}
-
-	virtual void close_complete_func(pointer /*p*/, int& /*ec_value*/){
-
-	}
-
-	virtual int read_pk_header_complete_func(
-			pointer /*p*/,
-			char*& /*rev_data*/,
-			size_t& /*rev_data_size*/,
-			size_t& /*remain_size*/,
-			error_what& /*e_what*/){
-
-		return 0;
-	}
-
-	virtual int read_pk_full_complete_func(
-			pointer /*p*/,
-			char*& /*rev_data*/,
-			size_t& /*rev_data_size*/,
-			error_what& /*e_what*/){
-		return 0;
-	}
-
-	virtual void write_pk_full_complete_func(
-			pointer /*p*/,
-			char*& /*snd_p*/,
-			size_t& /*snd_size*/,
-			const boost::system::error_code& /*ec*/){
-
-	}
-
-	virtual int active_send_in_ioservice_func(pointer /*p*/, package*& /*pk*/, error_what& /*e_what*/){
-
-		return 0;
-	}
-
-	virtual int make_first_sended_package_func(package*& /*pk*/, error_what& /*e_what*/){
-
-		return 0;
-	}
-
-protected:
-	boost::asio::io_service& 	ios_;
-	ip::tcp::socket 			socket_;
-
-	bool is_valid_;
-
-	package rev_mgr_;
-	size_t package_size_;
-
-
-	boost::function<void()> 					f_;
-
-	deadline_timer timer_;				// Heartjump timer.
-
-	enum {
-		CLOSE_COMPLETED_EC_TYPE_MAKE_FIRST_PACKAGE_FAIL = 0x01,
-	};
-};
-
-} }
+        }
+}
 
 
 #endif /* BINGO_TCP_CET_HANDLER_HEADER_H_ */

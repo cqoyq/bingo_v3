@@ -20,121 +20,125 @@ using namespace std;
 using namespace boost;
 using namespace boost::asio;
 
-namespace bingo { namespace TCP {
+namespace bingo {
+        namespace TCP {
 
-template<typename HANDLER,
-		 typename PARSER>
-class tcp_client {
-public:
-	typedef boost::shared_ptr<HANDLER> pointer;
+                template<typename HANDLER ,
+                typename PARSER>
+                class tcp_client {
+                public:
+                        typedef boost::shared_ptr<HANDLER> pointer;
+                        tcp_client( boost::asio::io_service& io_service , string& ipv4 , u16_t& port ) :
+                        ios_( io_service ) , ipv4_( ipv4 ) , port_( port ) ,
+                        timer_( io_service ) ,
+                        retry_delay_( PARSER::retry_delay_seconds ) {
+                                start_connect( );
+                        }
+                        virtual ~tcp_client( ) {
+                        }
 
-	tcp_client(boost::asio::io_service& io_service, string& ipv4, u16_t& port):
-						ios_(io_service), ipv4_(ipv4), port_(port),
-						timer_(io_service),
-						retry_delay_(PARSER::retry_delay_seconds){
-		start_connect();
-	}
+                        // Start to connect to server.
+                        void start_connect( ) {
 
-	virtual ~tcp_client(){}
+                                // Make new tcp_connection object.
+                                pointer new_handler( new HANDLER( ios_ ,
+                                        boost::bind( &tcp_client::reconnect , this ) ) );
 
-	void start_connect(){
+                                // Start to connect.
+                                new_handler->socket( ).async_connect(
+                                        ip::tcp::endpoint( boost::asio::ip::address_v4::from_string( ipv4_ ) , port_ ) ,
+                                        boost::bind( &tcp_client::connect_handler , this , new_handler ,
+                                        boost::asio::placeholders::error ) );
+                        }
 
-		// Make new tcp_connection object.
-		pointer new_handler(new HANDLER(ios_,
-				boost::bind(&tcp_client::reconnect, this)));
+                private:
 
-		// Start to connect.
-		new_handler->socket().async_connect(
-				ip::tcp::endpoint(boost::asio::ip::address_v4::from_string(ipv4_), port_),
-				boost::bind(&tcp_client::connect_handler, this, new_handler,
-				boost::asio::placeholders::error));
-	}
+                        // Call the function when connect in handler again.
+                        void reconnect( ) {
+                                retry_delay_ = PARSER::retry_delay_seconds;
 
-private:
+                                // If retry_delay_seconds is 0, then don't reconnect.
+                                if (retry_delay_ == 0)
+                                        return;
 
-	// Call the function when connect in handler again.
-	void reconnect(){
-		retry_delay_ = PARSER::retry_delay_seconds;
+                                start_connect( );
+                        }
 
-		// If retry_delay_seconds is 0, then don't reconnect.
-		if(retry_delay_ == 0)
-			return;
+                        // Call the method after connect to server success.
+                        void connect_handler( pointer new_handler ,
+                                const boost::system::error_code& ec ) {
+                                if (!ec) {
 
-		start_connect();
-	}
+                                        // Call connet_success_func()
+                                        error_what e_what;
+                                        if (connet_success_func( new_handler , e_what ) == 0)
+                                                // Start to aync-read.
+                                                new_handler->start( );
+                                        else {
 
-	void connect_handler(pointer new_handler,
-			const boost::system::error_code& ec){
-		if (!ec){
+                                                new_handler->catch_error( e_what );
 
-			// Call connet_success_func()
-			error_what e_what;
-			if(connet_success_func(new_handler, e_what) == 0)
-				// Start to aync-read.
-				new_handler->start();
-			else{
+                                                // Active close socket.
+                                                new_handler->close_socket( );
+                                        }
 
-				new_handler->catch_error(e_what);
+                                } else {
 
-				// Active close socket.
-				new_handler->close_socket();
-			}
+                                        // If retry_delay_seconds is 0, then don't reconnect.
+                                        if (PARSER::retry_delay_seconds == 0)
+                                                return;
 
-		}else{
+                                        // Begin to reconnect.
+                                        retry_delay_ *= 2;
+                                        if (retry_delay_ > PARSER::max_retry_delay_seconds)
+                                                retry_delay_ = PARSER::max_retry_delay_seconds;
 
-			// If retry_delay_seconds is 0, then don't reconnect.
-			if(PARSER::retry_delay_seconds == 0)
-				return;
+                                        connet_fail_func( new_handler , retry_delay_ );
 
-			// Begin to reconnect.
-			retry_delay_ *= 2;
-			if (retry_delay_ > PARSER::max_retry_delay_seconds)
-				retry_delay_ = PARSER::max_retry_delay_seconds;
+                                        // Start to reconnet.
+                                        schedule_timer( retry_delay_ );
 
-			connet_fail_func(new_handler, retry_delay_);
+                                        return;
+                                }
+                        }
 
-			// Start to reconnet.
-			schedule_timer(retry_delay_);
+                        // Schedule reconnect timer.
+                        void schedule_timer( int& expire_second ) {
 
-			return;
-		}
-	}
+                                boost::posix_time::seconds s( expire_second );
+                                boost::posix_time::time_duration td = s;
+                                timer_.expires_from_now( td );
+                                timer_.async_wait( bind( &tcp_client::time_out_handler , this , boost::asio::placeholders::error ) );
+                        }
 
-	void schedule_timer(int& expire_second){
+                        // Reconnect timer callback.
+                        void time_out_handler( const system::error_code& ec ) {
 
-		boost::posix_time::seconds s(expire_second);
-		boost::posix_time::time_duration td = s;
-		timer_.expires_from_now(td);
-		timer_.async_wait(bind(&tcp_client::time_out_handler, this, boost::asio::placeholders::error));
-	}
+                                if (!ec)
+                                        start_connect( );
+                        }
 
-	void time_out_handler(const system::error_code& ec){
+                public:
+                        virtual int connet_success_func( pointer /*ptr*/ , error_what& /*err_code*/ ) {
+                                return 0;
+                        }
+                        virtual void connet_fail_func( pointer /*ptr*/ , int& /*retry_delay_seconds*/ ) {
 
-		if(!ec)
-			start_connect();
-	}
+                        }
 
-public:
-	virtual int connet_success_func(pointer /*ptr*/, error_what& /*err_code*/){
-		return 0;
-	}
+                protected:
+                        io_service &ios_;
+                        pointer handler_;
 
-	virtual void connet_fail_func(pointer /*ptr*/, int& /*retry_delay_seconds*/){
+                        string ipv4_;
+                        u16_t port_;
 
-	}
+                        int retry_delay_; // reconnect delay seconds.
+                        deadline_timer timer_; // reconnect timer.
+                };
 
-protected:
-	io_service 	&ios_;
-	pointer 	handler_;
-
-	string 		ipv4_;
-	u16_t    	port_;
-
-	int retry_delay_;				// reconnect delay seconds.
-	deadline_timer timer_;			// reconnect timer.
-};
-
-} }
+        }
+}
 
 
 #endif /* BINGO_TCP_CLIENT_HEADER_H_ */
