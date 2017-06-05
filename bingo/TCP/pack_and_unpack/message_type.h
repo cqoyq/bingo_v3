@@ -17,7 +17,7 @@ namespace bingo { namespace TCP { namespace pack_and_unpack {
 #ifdef BINGO_SART_MESSAGE_TYPE
 enum message_type {
 	 	// Account message
-		MESSAGE_TYPE_ACCOUNT_CREATE_NEW				= 0x01,
+		MESSAGE_TYPE_ACCOUNT_SIGN_IN            				= 0x01,
 		MESSAGE_TYPE_ACCOUNT_MODIFY_PWD				= 0x02,
 		// Report message
 		MESSAGE_TYPE_REPORT_CREATE_SLIDE				= 0x20,		// 32

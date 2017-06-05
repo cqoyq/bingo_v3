@@ -10,18 +10,26 @@
 
 #include "bingo/type.h"
 
-namespace bingo { namespace TCP { namespace pack_and_unpack {
+namespace bingo {
+        namespace TCP {
+                namespace pack_and_unpack {
 
-struct net_layer {
+                        struct net_layer {
+                                int message_type;
+                                bingo::u32_t next;
+                                bingo::u32_t next_num;
+                                bingo::u64_t session;
+                                string req_addr;
+                                net_layer(){
+                                        message_type = 0;
+                                        next = 0;
+                                        next_num = 0;
+                                        session = 0;
+                                }
+                        };
 
-	int				 	message_type;
-	bingo::u32_t 		next;
-	bingo::u32_t		next_num;
-	bingo::u64_t		session;
-	string				req_addr;
-
-};
-
-} } }
+                }
+        }
+}
 
 #endif /* BINGO_TCP_PACK_AND_UNPACK_NET_LAYER_H_ */
