@@ -38,6 +38,8 @@ enum message_type {
 		MESSAGE_TYPE_REPORT_EXECUTE_VISITOR				= 0x2F,		// 47
 		MESSAGE_TYPE_REPORT_RUN_VISITOR				= 0x30,		// 48
                                           MESSAGE_TYPE_MAIN_RUN_SCRIPT                                                                                            = 0x31,		// 49
+                                          MESSAGE_TYPE_MS_AUTHENTICATION                                                                                      = 0x32,		// 50
+                                          MESSAGE_TYPE_RECORD_SCRIPT                                                                                                  = 0x33,		// 51
 };
 #endif
 } } }
