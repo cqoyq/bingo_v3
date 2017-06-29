@@ -40,6 +40,7 @@ enum message_type {
                                           MESSAGE_TYPE_MAIN_RUN_SCRIPT                                                                                            = 0x31,		// 49
                                           MESSAGE_TYPE_MS_AUTHENTICATION                                                                                      = 0x32,		// 50
                                           MESSAGE_TYPE_RECORD_SCRIPT                                                                                                  = 0x33,		// 51
+                                          MESSAGE_TYPE_INSPECT_SCRIPT_TCP                                                                                       = 0x34,		// 52
 };
 #endif
 } } }
