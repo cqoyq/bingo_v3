@@ -8,7 +8,6 @@ INCLUDE = -I$(BOOST_INCLUDE_ROOT) \
 LIBS =  -lamqpcpp \
 	-lpthread \
 	-lmysqlclient_r \
-	-lsqlite3 \
 	-lrt \
 	-lboost_random \
 	-lboost_regex \

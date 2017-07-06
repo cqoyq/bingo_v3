@@ -31,6 +31,8 @@ enum {
 	ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_SERVER				= 0x0A,
 	ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_CLIENT				= 0x0B,
 	ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_FIRST_PACKAGE_ERROR		= 0x0C,
+                     ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_HEARTBEAT			= 0x0D,
+                     ERROR_TYPE_TCP_CLIENT_CLOSE_SOCKET_BY_WRITE_ERROR                                                       = 0x0E,
 
 	// -------------------------------- tcp-handler-manager ------------------------------ //
 	ERROR_TYPE_HANDLER_MANAGER_QUEUE_IS_FULL   		 		= 0x10,

@@ -14,189 +14,246 @@ using namespace boost::posix_time;
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 using namespace boost;
+// crc
+#include <boost/crc.hpp>
+// sha1
+#include <boost/uuid/sha1.hpp>
+using namespace boost::uuids::detail;
 
+void string_ex::clear( ) {
 
-void string_ex::clear(){
+        // Clear stringstream.
+        oss_.clear( );
+        oss_.str( "" );
 
-	// Clear stringstream.
-	oss_.clear();
-	oss_.str("");
-
-	str_ .clear();
-	memset(&chr_[0], 0x00, MAX_SIZE_OF_CHR);
+        str_ .clear( );
+        memset( &chr_[0] , 0x00 , MAX_SIZE_OF_CHR );
 }
 
+int string_ex::char_to_int( string chr ) {
 
-int string_ex::char_to_int(string chr){
+        // Change to lower.
+        to_lower( chr );
 
-	// Change to lower.
-	to_lower(chr);
-
-	if(chr.compare("1") == 0){
-		return 1;
-	}else if (chr.compare("2") == 0){
-		return 2;
-	}else if (chr.compare("3") == 0){
-		return 3;
-	}else if (chr.compare("4") == 0){
-		return 4;
-	}else if (chr.compare("5") == 0){
-		return 5;
-	}else if (chr.compare("6") == 0){
-		return 6;
-	}else if (chr.compare("7") == 0){
-		return 7;
-	}else if (chr.compare("8") == 0){
-		return 8;
-	}else if (chr.compare("9") == 0){
-		return 9;
-	}else if (chr.compare("a") == 0){
-		return 10;
-	}else if (chr.compare("b") == 0){
-		return 11;
-	}else if (chr.compare("c") == 0){
-		return 12;
-	}else if (chr.compare("d") == 0){
-		return 13;
-	}else if (chr.compare("e") == 0){
-		return 14;
-	}else if (chr.compare("f") == 0){
-		return 15;
-	}else{
-		return 0;
-	}
+        if ( chr.compare( "1" ) == 0 ) {
+                return 1;
+        } else if ( chr.compare( "2" ) == 0 ) {
+                return 2;
+        } else if ( chr.compare( "3" ) == 0 ) {
+                return 3;
+        } else if ( chr.compare( "4" ) == 0 ) {
+                return 4;
+        } else if ( chr.compare( "5" ) == 0 ) {
+                return 5;
+        } else if ( chr.compare( "6" ) == 0 ) {
+                return 6;
+        } else if ( chr.compare( "7" ) == 0 ) {
+                return 7;
+        } else if ( chr.compare( "8" ) == 0 ) {
+                return 8;
+        } else if ( chr.compare( "9" ) == 0 ) {
+                return 9;
+        } else if ( chr.compare( "a" ) == 0 ) {
+                return 10;
+        } else if ( chr.compare( "b" ) == 0 ) {
+                return 11;
+        } else if ( chr.compare( "c" ) == 0 ) {
+                return 12;
+        } else if ( chr.compare( "d" ) == 0 ) {
+                return 13;
+        } else if ( chr.compare( "e" ) == 0 ) {
+                return 14;
+        } else if ( chr.compare( "f" ) == 0 ) {
+                return 15;
+        } else {
+                return 0;
+        }
 }
 
-const char* string_ex::stream_to_string(const char* p, size_t p_size){
+const char* string_ex::stream_to_string( const char* p , size_t p_size ) {
 
-	clear();
+        clear( );
 
-	char tmp[4] = {0x00};
-	for (size_t i = 0; i < p_size; ++i) {
-		u8_t ch = (u8_t)(*(p + i));
-		memset(tmp, 0x00, 4);
-		sprintf(tmp, "%02x ", ch);
+        char tmp[4] = { 0x00 };
+        for ( size_t i = 0; i < p_size; ++i ) {
+                u8_t ch = ( u8_t ) ( *( p + i ) );
+                memset( tmp , 0x00 , 4 );
+                sprintf( tmp , "%02x " , ch );
 
-		str_.append(&tmp[0]);
-	}
+                str_.append( &tmp[0] );
+        }
 
-	trim(str_);
+        trim( str_ );
 
-	return str_.c_str();
+        return str_.c_str( );
 }
 
-void string_ex::string_to_stream(string& in, char*& out){
-	vector<string> v;
-	split(v, in, is_any_of(" "),token_compress_on);
+void string_ex::string_to_stream( string& in , char*& out ) {
+        vector<string> v;
+        split( v , in , is_any_of( " " ) , token_compress_on );
 
-	size_t max = v.size();
-	for (size_t i = 0; i < max; ++i) {
-		string vt = v[i];
+        size_t max = v.size( );
+        for ( size_t i = 0; i < max; ++i ) {
+                string vt = v[i];
 
-		string height_bit = vt.substr(0, 1);
-		string low_bit 	 = vt.substr(1, 1);
-		int hbit =char_to_int(height_bit);
-		int lbit  =char_to_int(low_bit);
+                string height_bit = vt.substr( 0 , 1 );
+                string low_bit = vt.substr( 1 , 1 );
+                int hbit = char_to_int( height_bit );
+                int lbit = char_to_int( low_bit );
 
-		int value = lbit + hbit * 16;
+                int value = lbit + hbit * 16;
 
-		out[i] = value;
-	}
+                out[i] = value;
+        }
 }
 
-const char* string_ex::stream_to_char(const char* p, size_t p_size){
+const char* string_ex::stream_to_char( const char* p , size_t p_size ) {
 
-	clear();
+        clear( );
 
-	char str[p_size + 1];
-	memset(str, 0x00, p_size+1);
-	memcpy(str, p, p_size);
+        char str[p_size + 1];
+        memset( str , 0x00 , p_size + 1 );
+        memcpy( str , p , p_size );
 
-	str_.append(str);
+        str_.append( str );
 
-	return str_.c_str();
+        return str_.c_str( );
 }
 
-const char* string_ex::short_to_stream(u16_t value){
+const char* string_ex::short_to_stream( u16_t value ) {
 
-	clear();
+        clear( );
 
-	chr_[0] = value % 256;
-	chr_[1] = value / 256;
+        chr_[0] = value % 256;
+        chr_[1] = value / 256;
 
-	return chr_;
+        return chr_;
 }
 
-u16_t string_ex::stream_to_short(const char* p){
-	u16_t v;
-	memcpy(&v, p, 2);
+u16_t string_ex::stream_to_short( const char* p ) {
+        u16_t v;
+        memcpy( &v , p , 2 );
 
-	return v;
+        return v;
 }
 
-u64_t string_ex::pointer_to_long(const void* p){
-	u64_t address;
-	memcpy(&address, &p, 8);
+u64_t string_ex::pointer_to_long( const void* p ) {
+        u64_t address;
+        memcpy( &address , &p , 8 );
 
-	return address;
+        return address;
 }
 
-u32_t string_ex::ip_to_int(string& s){
-	vector<string> v;
-	split(v, s, is_any_of("."), token_compress_on);
+u32_t string_ex::ip_to_int( string& s ) {
+        vector<string> v;
+        split( v , s , is_any_of( "." ) , token_compress_on );
 
-	if(v.size() != 4)
-		return 0;
-	else{
+        if ( v.size( ) != 4 )
+                return 0;
+        else {
 
-		u8_t data[4] = {0x00, 0x00, 0x00, 0x00};
-		data[0] = lexical_cast<u32_t>(v[0]);
-		data[1] = lexical_cast<u32_t>(v[1]);
-		data[2] = lexical_cast<u32_t>(v[2]);
-		data[3] = lexical_cast<u32_t>(v[3]);
+                u8_t data[4] = { 0x00 , 0x00 , 0x00 , 0x00 };
+                data[0] = lexical_cast<u32_t>( v[0] );
+                data[1] = lexical_cast<u32_t>( v[1] );
+                data[2] = lexical_cast<u32_t>( v[2] );
+                data[3] = lexical_cast<u32_t>( v[3] );
 
-		return data[0] + data[1]*256 + data[2]*256*256 + data[3]*256*256*256;
-	}
+                return data[0] + data[1]*256 + data[2]*256 * 256 + data[3]*256 * 256 * 256;
+        }
 }
 
-const char* string_ex::int_to_ip(u32_t n){
+const char* string_ex::int_to_ip( u32_t n ) {
 
-	clear();
+        clear( );
 
-	u32_t n_part1 = n % 256;
-	u32_t n_part2 = n / 256 % 256;
-	u32_t n_part3 = n / 256 / 256 % 256;
-	u32_t n_part4 = n / 256 / 256 / 256;
+        u32_t n_part1 = n % 256;
+        u32_t n_part2 = n / 256 % 256;
+        u32_t n_part3 = n / 256 / 256 % 256;
+        u32_t n_part4 = n / 256 / 256 / 256;
 
-	char tmp[16] = {0x00};
-	memset(tmp, 0x00, 16);
-	sprintf(&tmp[0], "%d.%d.%d.%d", n_part1, n_part2, n_part3, n_part4);
+        char tmp[16] = { 0x00 };
+        memset( tmp , 0x00 , 16 );
+        sprintf( &tmp[0] , "%d.%d.%d.%d" , n_part1 , n_part2 , n_part3 , n_part4 );
 
-	str_.append(&tmp[0]);
+        str_.append( &tmp[0] );
 
-	return str_.c_str();
+        return str_.c_str( );
 }
 
-
-
-const char* string_ex::convert(const char*& t){
-	clear();
-	str_.append(t);
-	return str_.c_str();
+const char* string_ex::convert( const char*& t ) {
+        clear( );
+        str_.append( t );
+        return str_.c_str( );
 }
 
-const char* string_ex::convert(const char& t){
-	clear();
-	u8_t c = (u8_t)t;
-	oss_ << (u16_t)c;
-	oss_ >> str_;
-	return str_.c_str();
+const char* string_ex::convert( const char& t ) {
+        clear( );
+        u8_t c = ( u8_t ) t;
+        oss_ << ( u16_t ) c;
+        oss_ >> str_;
+        return str_.c_str( );
 }
 
-const char* string_ex::convert(const u8_t& t){
-	clear();
-	oss_ << (u16_t)t;
-	oss_ >> str_;
-	return str_.c_str();
+const char* string_ex::convert( const u8_t& t ) {
+        clear( );
+        oss_ << ( u16_t ) t;
+        oss_ >> str_;
+        return str_.c_str( );
 }
 
+// uuid
+
+string string_ex::uuid_to_string( boost::uuids::uuid& u ) {
+        std::stringstream ss;
+        ss << u;
+        string out;
+        ss >> out;
+
+        return out;
+}
+
+void string_ex::string_to_uuid( string& in , boost::uuids::uuid& u ) {
+        string_generator sgen;
+        uuid u1 = sgen( in );
+        memcpy( u.data , u1.data , 16 );
+}
+
+string string_ex::make_random_uuid( ) {
+        random_generator rgen; //随机生成器
+        uuid u = rgen( );
+
+        return uuid_to_string( u );
+}
+
+void string_ex::sha1_to_stream( string& in_stream , string& out_stream ) {
+        sha1 sha;
+        sha.process_bytes( in_stream.c_str( ) , in_stream.length( ) );
+
+        u32_t digest[5];
+        sha.get_digest( digest );
+
+        char d[20] = { 0x00 };
+        for ( int i = 0; i < 5; i++ ) {
+                u32_t elem = digest[i];
+                memcpy( d + i * 4 , &elem , 4 );
+        }
+
+        out_stream.append( d , 20 );
+}
+
+void string_ex::crc32_to_stream( string& in_stream , string& out_stream ) {
+
+        u32_t re = crc32_to_int( in_stream );
+
+        char data[4] = { 0x00 };
+        memcpy( data , &re , 4 );
+
+        out_stream.append( data , 4 );
+}
+
+u32_t string_ex::crc32_to_int( string& in_stream ) {
+        crc_32_type crc32;
+        crc32.process_bytes( in_stream.c_str( ) , in_stream.length( ) );
+
+        return crc32.checksum( );
+}

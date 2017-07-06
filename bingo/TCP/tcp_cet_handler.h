@@ -28,23 +28,24 @@ using namespace boost::posix_time;
 namespace bingo {
         namespace TCP {
 
-                template<typename HEARTJUMP , typename PARSER , typename TCP_MESSAGE_PACKAGE>
+                template< typename PARSER , typename TCP_MESSAGE_PACKAGE>
                 class tcp_cet_handler
-                : public boost::enable_shared_from_this<tcp_cet_handler<HEARTJUMP , PARSER , TCP_MESSAGE_PACKAGE> > {
+                : public boost::enable_shared_from_this<tcp_cet_handler<PARSER , TCP_MESSAGE_PACKAGE> > {
                 public:
                         typedef boost::shared_ptr<tcp_cet_handler> pointer;
                         typedef mem_guard<TCP_MESSAGE_PACKAGE> package;
 
                         // Construct and destruct
                         tcp_cet_handler( boost::asio::io_service& io_service ,
-                                boost::function<void( ) > f // reconnect func
+                                boost::function<void( ) > f , // reconnect func
+                                boost::function<void(bool ) > f1 // authenticate pass func
                                 )
                         : ios_( io_service ) ,
                         socket_( io_service ) ,
-                        timer_( io_service ) ,
                         is_valid_( true ) ,
                         package_size_( sizeof (TCP_MESSAGE_PACKAGE ) ) ,
-                        f_( f ) {
+                        f_( f ) ,
+                        f1_( f1 ) {
                         }
                         virtual ~tcp_cet_handler( ) {
 #ifdef BINGO_TCP_CLIENT_DEBUG
@@ -84,9 +85,6 @@ namespace bingo {
                                                         boost::asio::placeholders::bytes_transferred ,
                                                         pk ) );
                                         }
-
-                                        // Start to send heartjump package
-                                        schedule_timer( );
 
                                 } else {
 
@@ -138,7 +136,31 @@ namespace bingo {
                                 ios_.post( bind( &tcp_cet_handler::active_close , this->shared_from_this( ) , p_err ) );
                         }
 
+                        // Set heartjump time.
+                        void set_heartjump_datetime( ) {
+                                p1_ = boost::posix_time::microsec_clock::local_time( );
+
+                        }
+
+                        // Check whether heartjump is timeout.
+                        bool check_heartjump_timeout( ) {
+
+                                ptime now = boost::posix_time::microsec_clock::local_time( );
+                                ptime p1 = now - seconds( PARSER::max_interval_seconds_check_heartjump );
+
+                                if (p1_ < p1) {
+                                        return true;
+                                } else {
+                                        return false;
+                                }
+                        }
+
                 protected:
+                        // Set authenticate status.
+                        void set_authenticate_pass( bool is_pass ) {
+                                f1_( is_pass );
+                        }
+
                         // Reconnect to server.
                         void reconnet( ) {
                                 f_( );
@@ -388,48 +410,6 @@ namespace bingo {
                                 pk = 0;
                         }
 
-                        // Schedule active heartjump timer.
-                        void schedule_timer( ) {
-
-                                // If max_interval_seconds_on_heartjump is 0, then don't send heartjump.
-                                if (PARSER::max_interval_seconds_on_heartjump > 0) {
-                                        seconds s( PARSER::max_interval_seconds_on_heartjump );
-                                        time_duration td = s;
-
-                                        timer_.expires_from_now( td );
-                                        timer_.async_wait( bind( &tcp_cet_handler::time_out_handler , this ,
-                                                boost::asio::placeholders::error ) );
-                                }
-                        }
-
-                        // The callback active heartjump.
-                        void time_out_handler( const system::error_code& ec ) {
-                                if (!ec) {
-
-                                        error_what e_what;
-                                        package* pk = 0;
-                                        char* p = &HEARTJUMP::data[0];
-                                        if (malloc_snd_buffer( p , HEARTJUMP::data_size , pk , e_what ) == 0) {
-
-                                                // Send heartjump
-                                                boost::asio::async_write( socket_ ,
-                                                        buffer( pk->header( ) , pk->length( ) ) ,
-                                                        boost::bind( &tcp_cet_handler::write_handler ,
-                                                        this->shared_from_this( ) ,
-                                                        boost::asio::placeholders::error ,
-                                                        boost::asio::placeholders::bytes_transferred ,
-                                                        pk ) );
-
-                                                seconds s( PARSER::max_interval_seconds_on_heartjump );
-                                                time_duration td = s;
-
-                                                timer_.expires_from_now( td );
-                                                timer_.async_wait( bind( &tcp_cet_handler::time_out_handler , this ,
-                                                        boost::asio::placeholders::error ) );
-                                        }
-                                }
-                        }
-
                 public:
                         virtual void catch_error_func( pointer /*p*/ , error_what& /*e_what*/ ) {
 
@@ -478,10 +458,9 @@ namespace bingo {
                         package rev_mgr_;
                         size_t package_size_;
 
-
-                        boost::function<void( ) > f_;
-
-                        deadline_timer timer_; //  Active heartjump timer.
+                        boost::function<void(bool ) > f1_; // authenticate pass callback
+                        boost::function<void( ) > f_; // reconnect callback.
+                        ptime p1_; // Save heart jump datetime.
 
                         enum {
                                 CLOSE_COMPLETED_EC_TYPE_MAKE_FIRST_PACKAGE_FAIL = 0x01 ,
