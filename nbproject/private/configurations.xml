@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="bingo">
+        <df name="configuration">
+          <df name="json">
+            <in>json_parser.cpp</in>
+            <in>json_parser.h</in>
+          </df>
+          <df name="xml">
+            <in>xml_parser.cpp</in>
+            <in>xml_parser.h</in>
+          </df>
+          <in>node.cpp</in>
+          <in>node.h</in>
+        </df>
+        <df name="database">
+          <df name="config">
+            <in>cfg.cpp</in>
+            <in>cfg.h</in>
+          </df>
+          <df name="mysql">
+            <in>all.h</in>
+            <in>mysql_connector.cpp</in>
+            <in>mysql_connector.h</in>
+            <in>mysql_pool.cpp</in>
+            <in>mysql_pool.h</in>
+            <in>mysql_timer.cpp</in>
+            <in>mysql_timer.h</in>
+            <in>mysql_visitor.cpp</in>
+            <in>mysql_visitor.h</in>
+          </df>
+          <in>db_connector.cpp</in>
+          <in>db_connector.h</in>
+          <in>db_factory.cpp</in>
+          <in>db_factory.h</in>
+          <in>db_field.cpp</in>
+          <in>db_field.h</in>
+          <in>db_result.cpp</in>
+          <in>db_result.h</in>
+          <in>db_row.cpp</in>
+          <in>db_row.h</in>
+          <in>db_visitor.h</in>
+        </df>
+        <df name="log">
+          <df name="config">
+            <in>local_cfg.cpp</in>
+            <in>local_cfg.h</in>
+            <in>rbmq_cfg.cpp</in>
+            <in>rbmq_cfg.h</in>
+          </df>
+          <df name="handlers">
+            <in>file_logger_every_day.cpp</in>
+            <in>file_logger_every_day.h</in>
+            <in>file_logger_every_hour.cpp</in>
+            <in>file_logger_every_hour.h</in>
+            <in>file_logger_no_postfix.cpp</in>
+            <in>file_logger_no_postfix.h</in>
+            <in>local_log_visitor.cpp</in>
+            <in>local_log_visitor.h</in>
+            <in>rbmq_log_visitor.cpp</in>
+            <in>rbmq_log_visitor.h</in>
+          </df>
+          <in>log_factory.cpp</in>
+          <in>log_factory.h</in>
+          <in>log_handler.h</in>
+          <in>log_level.cpp</in>
+          <in>log_level.h</in>
+          <in>logger.cpp</in>
+          <in>logger.h</in>
+        </df>
+        <df name="RabbitMQ">
+          <df name="config">
+            <in>rb_cfg_value.h</in>
+            <in>rb_receiver_cfg.cpp</in>
+            <in>rb_receiver_cfg.h</in>
+            <in>rb_sendor_cfg.cpp</in>
+            <in>rb_sendor_cfg.h</in>
+          </df>
+          <df name="handlers">
+            <in>publish_receiver.cpp</in>
+            <in>publish_receiver.h</in>
+            <in>publish_sendor.cpp</in>
+            <in>publish_sendor.h</in>
+            <in>routing_receiver.cpp</in>
+            <in>routing_receiver.h</in>
+            <in>routing_sendor.cpp</in>
+            <in>routing_sendor.h</in>
+            <in>simple_receiver.cpp</in>
+            <in>simple_receiver.h</in>
+            <in>simple_sendor.cpp</in>
+            <in>simple_sendor.h</in>
+            <in>topic_receiver.cpp</in>
+            <in>topic_receiver.h</in>
+            <in>topic_sendor.cpp</in>
+            <in>topic_sendor.h</in>
+            <in>work_receiver.cpp</in>
+            <in>work_receiver.h</in>
+            <in>work_sendor.cpp</in>
+            <in>work_sendor.h</in>
+          </df>
+          <df name="visitor">
+            <in>asiohandler.cpp</in>
+            <in>asiohandler.h</in>
+          </df>
+          <in>rabbitmq_factory.cpp</in>
+          <in>rabbitmq_factory.h</in>
+          <in>rb_receiver.h</in>
+          <in>rb_sendor.h</in>
+        </df>
+        <df name="TCP">
+          <df name="config">
+            <in>cfg_value.h</in>
+            <in>receiver_cfg.cpp</in>
+            <in>receiver_cfg.h</in>
+            <in>sendor_cfg.cpp</in>
+            <in>sendor_cfg.h</in>
+          </df>
+          <df name="pack_and_unpack">
+            <in>message_type.h</in>
+            <in>net_layer.h</in>
+            <in>pack_handler.h</in>
+            <in>unpack_handler.h</in>
+          </df>
+          <in>tcp_cet_handler.h</in>
+          <in>tcp_cet_hdr_manager.h</in>
+          <in>tcp_client.h</in>
+          <in>tcp_handler_data.h</in>
+          <in>tcp_handler_manager.h</in>
+          <in>tcp_server.h</in>
+          <in>tcp_svr_handler.h</in>
+          <in>tcp_svr_hdr_manager.h</in>
+        </df>
+        <df name="thread">
+          <in>all.h</in>
+          <in>many_to_many.h</in>
+          <in>many_to_one.h</in>
+          <in>thread_data_type.h</in>
+        </df>
+        <in>define.h</in>
+        <in>error_what.cpp</in>
+        <in>error_what.h</in>
+        <in>foreach_.h</in>
+        <in>mem_guard.h</in>
+        <in>singleton.h</in>
+        <in>string.cpp</in>
+        <in>string.h</in>
+        <in>type.h</in>
+      </df>
+      <df name="logs">
+      </df>
+      <df name="test">
+        <df name="configuration">
+          <in>test_json.cpp</in>
+          <in>test_xml.cpp</in>
+        </df>
+        <df name="database">
+          <in>test_mysql_pool.cpp</in>
+          <in>test_mysql_visitor.cpp</in>
+        </df>
+        <df name="log">
+          <in>test_file_logger.cpp</in>
+        </df>
+        <df name="rabbitmq">
+          <in>test_publish.cpp</in>
+          <in>test_routing.cpp</in>
+          <in>test_simple.cpp</in>
+          <in>test_topic.cpp</in>
+          <in>test_work.cpp</in>
+        </df>
+        <df name="tcp">
+          <in>test_client_t1.cpp</in>
+          <in>test_client_t2.cpp</in>
+          <in>test_client_t3.cpp</in>
+          <in>test_client_t4.cpp</in>
+          <in>test_client_t5.cpp</in>
+          <in>test_server_t1.cpp</in>
+          <in>test_server_t10.cpp</in>
+          <in>test_server_t11.cpp</in>
+          <in>test_server_t2.cpp</in>
+          <in>test_server_t3.cpp</in>
+          <in>test_server_t4.cpp</in>
+          <in>test_server_t5.cpp</in>
+          <in>test_server_t6.cpp</in>
+          <in>test_server_t7.cpp</in>
+          <in>test_server_t8.cpp</in>
+          <in>test_server_t9.cpp</in>
+        </df>
+        <df name="thread">
+          <in>test_many_to_many_t1.cpp</in>
+          <in>test_many_to_many_t2.cpp</in>
+          <in>test_many_to_many_t3.cpp</in>
+          <in>test_many_to_many_t4.cpp</in>
+          <in>test_many_to_one_t1.cpp</in>
+          <in>test_many_to_one_t2.cpp</in>
+          <in>test_many_to_one_t3.cpp</in>
+        </df>
+        <in>test_mem_guard.cpp</in>
+        <in>test_singleton.cpp</in>
+        <in>test_string_ex.cpp</in>
+      </df>
+      <in>main.cpp</in>
+    </df>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+    <conf name="Release" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir></rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+    <conf name="Exe" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+            <option name="debug_command"
+                    value="./mytest --build_info=yes --run_test=test_rabbitmq_routing/t_receiver"/>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir></rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

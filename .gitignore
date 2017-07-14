@@ -8,7 +8,6 @@
 /jsonw.xml
 /xmlw.xml
 /logs/*
-/nbproject/*
 /bingo/*.o
 /bingo/*/*.o
 /bingo/*/*/*.o
