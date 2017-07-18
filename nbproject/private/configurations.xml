@@ -129,8 +129,10 @@
           <in>tcp_handler_data.h</in>
           <in>tcp_handler_manager.h</in>
           <in>tcp_server.h</in>
+          <in>tcp_ssl_server.h</in>
           <in>tcp_svr_handler.h</in>
           <in>tcp_svr_hdr_manager.h</in>
+          <in>tcp_svr_ssl_handler.h</in>
         </df>
         <df name="thread">
           <in>all.h</in>

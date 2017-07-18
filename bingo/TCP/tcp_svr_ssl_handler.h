@@ -1,12 +1,12 @@
 /*
- * tcp_svr_handler.h
+ * tcp_svr_ssl_handler.h
  *
  *  Created on: 2016-6-30
  *      Author: root
  */
 
-#ifndef BINGO_TCP_SVR_HANDLER_HEADER_H_
-#define BINGO_TCP_SVR_HANDLER_HEADER_H_
+#ifndef BINGO_TCP_SVR_SSL_HANDLER_HEADER_H_
+#define BINGO_TCP_SVR_SSL_HANDLER_HEADER_H_
 
 #include "bingo/type.h"
 #include "bingo/define.h"
@@ -18,6 +18,7 @@ using namespace std;
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/asio/ssl.hpp>
 using namespace boost;
 using namespace boost::asio;
 
@@ -28,18 +29,18 @@ namespace bingo {
       namespace TCP {
 
             template<typename PARSER, typename TCP_MESSAGE_PACKAGE>
-            class tcp_svr_handler
-            : public boost::enable_shared_from_this<tcp_svr_handler<PARSER, TCP_MESSAGE_PACKAGE> > {
+            class tcp_svr_ssl_handler {
             public:
 
                   typedef mem_guard<TCP_MESSAGE_PACKAGE> package;
-                  typedef boost::shared_ptr<tcp_svr_handler> pointer;
+                  typedef tcp_svr_ssl_handler* pointer;
+                  typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
 
                   // Construct and destruct
 
-                  tcp_svr_handler(boost::asio::io_service& io_service) :
+                  tcp_svr_ssl_handler(boost::asio::io_service& io_service, boost::asio::ssl::context& context) :
                   ios_(io_service),
-                  socket_(io_service),
+                  socket_(io_service, context),
                   is_valid_(true),
                   is_authentication_pass_(false),
                   package_size_(sizeof (TCP_MESSAGE_PACKAGE)) {
@@ -49,7 +50,7 @@ namespace bingo {
                         set_authentication_pass_datetime();
                   }
 
-                  virtual ~tcp_svr_handler() {
+                  virtual ~tcp_svr_ssl_handler() {
 #ifdef BINGO_TCP_SERVER_DEBUG
                         message_out_with_thread("handler:" << this << ",destory!");
 #endif
@@ -57,8 +58,8 @@ namespace bingo {
 
                   // Get scoket
 
-                  ip::tcp::socket& socket() {
-                        return socket_;
+                  ssl_socket::lowest_layer_type& socket() {
+                        return socket_.lowest_layer();
                   }
 
                   // Start to handle tcp.
@@ -71,30 +72,56 @@ namespace bingo {
                         // Set authentication start to time.
                         set_authentication_pass_datetime();
 
-                        // Start async read data, read finish to call read_handler().
-                        boost::asio::async_read(socket_,
-                                boost::asio::buffer(rev_mgr_.current(), PARSER::header_size),
-                                boost::bind(&tcp_svr_handler::read_handler,
-                                this->shared_from_this(),
-                                boost::asio::placeholders::error,
-                                boost::asio::placeholders::bytes_transferred,
-                                PARSER::header_size));
+                        // Start ssl handshake.
+                        socket_.async_handshake(boost::asio::ssl::stream_base::server,
+                                boost::bind(&tcp_svr_ssl_handler::handle_handshake, this,
+                                boost::asio::placeholders::error));
+
+
+                  }
+
+                  void handle_handshake(const boost::system::error_code& error) {
+                        if (!error) {
+                              
+                              // Start async read data, read finish to call read_handler().
+                              boost::asio::async_read(socket_,
+                                      boost::asio::buffer(rev_mgr_.current(), PARSER::header_size),
+                                      boost::bind(&tcp_svr_ssl_handler::read_handler,
+                                      this,
+                                      boost::asio::placeholders::error,
+                                      boost::asio::placeholders::bytes_transferred,
+                                      PARSER::header_size));
+                        } else {
+                              // Close socket.
+                              if (is_valid_) {
+                                    error_what e_what;
+                                    e_what.err_message("ssl handshake is fail");
+                                    e_what.err_no(ERROR_TYPE_TCP_SERVER_CLOSE_SOCKET_BY_SSL);
+                                    catch_error(e_what);
+                                    //                              close_socket();
+                                    close_completed(0);
+                              }
+
+                              delete this;
+
+                        }
                   }
 
                   // Close socket.
 
                   void close_socket() {
-                        // This function is used to close the socket. Any asynchronous send, receive
-                        // or connect operations will be cancelled immediately, and will complete
-                        // with the boost::asio::error::operation_aborted error.
-                        socket_.close();
+                        //   This function is used to close the socket. Any asynchronous send, receive
+                        //   or connect operations will be cancelled immediately, and will complete
+                        //   with the boost::asio::error::operation_aborted error.
+                        socket().close();
                   }
 
                   // Catch error infomation.
 
                   void catch_error(error_what& e_what) {
-                        catch_error_func(this->shared_from_this(), e_what);
+                        catch_error_func(this, e_what);
                   }
+
 
 
 
@@ -182,7 +209,7 @@ namespace bingo {
                   // These method is called in thread. 
 
                   void send_heartjump_in_thread() {
-                        ios_.post(bind(&tcp_svr_handler::active_send_heartjump, this->shared_from_this()));
+                        ios_.post(bind(&tcp_svr_ssl_handler::active_send_heartjump, this));
                   }
 
                   void send_data_in_thread(char*& sdata, size_t& sdata_size) {
@@ -193,7 +220,7 @@ namespace bingo {
                         // Malloc send buffer.
                         if (malloc_snd_buffer(sdata, sdata_size, new_data, e_what) == 0) {
 
-                              ios_.post(bind(&tcp_svr_handler::active_send_data, this->shared_from_this(), new_data));
+                              ios_.post(bind(&tcp_svr_ssl_handler::active_send_data, this, new_data));
                         } else {
 
                               send_close_in_thread(e_what);
@@ -206,7 +233,7 @@ namespace bingo {
                   void send_close_in_thread(error_what& e_what) {
                         error_what* p_err = new error_what();
                         e_what.clone(*p_err);
-                        ios_.post(bind(&tcp_svr_handler::active_close, this->shared_from_this(), p_err));
+                        ios_.post(bind(&tcp_svr_ssl_handler::active_close, this, p_err));
                   }
 
 
@@ -216,7 +243,7 @@ namespace bingo {
 
                   void active_send_heartjump() {
                         if (is_valid_) {
-                              active_send_heartjump_in_ioservice_func(this->shared_from_this());
+                              active_send_heartjump_in_ioservice_func(this);
                         }
                   }
 
@@ -243,7 +270,7 @@ namespace bingo {
 
 
                               error_what e_what;
-                              if (active_send_data_in_ioservice_func(this->shared_from_this(), pk, e_what) == -1) {
+                              if (active_send_data_in_ioservice_func(this, pk, e_what) == -1) {
 
                                     catch_error(e_what);
 
@@ -254,8 +281,8 @@ namespace bingo {
 
                               boost::asio::async_write(socket_,
                                       buffer(pk->header(), pk->length()),
-                                      boost::bind(&tcp_svr_handler::write_handler,
-                                      this->shared_from_this(),
+                                      boost::bind(&tcp_svr_ssl_handler::write_handler,
+                                      this,
                                       boost::asio::placeholders::error,
                                       boost::asio::placeholders::bytes_transferred,
                                       pk));
@@ -304,8 +331,8 @@ namespace bingo {
 
                               boost::asio::async_read(socket_,
                                       buffer(rev_mgr_.current(), remain),
-                                      bind(&tcp_svr_handler::read_handler,
-                                      this->shared_from_this(),
+                                      bind(&tcp_svr_ssl_handler::read_handler,
+                                      this,
                                       boost::asio::placeholders::error,
                                       boost::asio::placeholders::bytes_transferred,
                                       remain));
@@ -317,7 +344,7 @@ namespace bingo {
 
                               char* p = rev_mgr_.header();
                               if (read_pk_header_complete_func(
-                                      this->shared_from_this(),
+                                      this,
                                       p,
                                       rev_mgr_.length(),
                                       remain,
@@ -349,8 +376,8 @@ namespace bingo {
                               // Continue read other data.
                               boost::asio::async_read(socket_,
                                       buffer(rev_mgr_.current(), remain),
-                                      bind(&tcp_svr_handler::read_handler,
-                                      this->shared_from_this(),
+                                      bind(&tcp_svr_ssl_handler::read_handler,
+                                      this,
                                       boost::asio::placeholders::error,
                                       boost::asio::placeholders::bytes_transferred,
                                       remain));
@@ -361,7 +388,7 @@ namespace bingo {
 
                               char* p = rev_mgr_.header();
                               if (read_pk_full_complete_func(
-                                      this->shared_from_this(),
+                                      this,
                                       p,
                                       rev_mgr_.length(),
                                       e_what) == -1) {
@@ -381,8 +408,8 @@ namespace bingo {
                               // Start new async read data.
                               boost::asio::async_read(socket_,
                                       boost::asio::buffer(rev_mgr_.current(), PARSER::header_size),
-                                      boost::bind(&tcp_svr_handler::read_handler,
-                                      this->shared_from_this(),
+                                      boost::bind(&tcp_svr_ssl_handler::read_handler,
+                                      this,
                                       boost::asio::placeholders::error,
                                       boost::asio::placeholders::bytes_transferred,
                                       PARSER::header_size));
@@ -395,7 +422,7 @@ namespace bingo {
 
 
                         char* p = pk->header();
-                        write_pk_full_complete_func(this->shared_from_this(), p, bytes_transferred, ec);
+                        write_pk_full_complete_func(this, p, bytes_transferred, ec);
 
 
                         free_snd_buffer(pk);
@@ -430,7 +457,7 @@ namespace bingo {
 
                         is_valid_ = false;
 
-                        close_complete_func(this->shared_from_this(), ec_value);
+                        close_complete_func(this, ec_value);
                   }
 
                   // Malloc packge space.
@@ -507,7 +534,7 @@ namespace bingo {
 
             protected:
                   boost::asio::io_service& ios_;
-                  ip::tcp::socket socket_;
+                  ssl_socket socket_;
 
                   bool is_valid_;
 
@@ -524,4 +551,4 @@ namespace bingo {
       }
 }
 
-#endif /* BINGO_TCP_SVR_HANDLER_HEADER_H_ */
+#endif /* BINGO_TCP_SVR_SSL_HANDLER_HEADER_H_ */

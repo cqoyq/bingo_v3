@@ -71,6 +71,7 @@
             <in>receiver_cfg.cpp</in>
             <in>sendor_cfg.cpp</in>
           </df>
+          <in>tcp_ssl_server.h</in>
         </df>
         <in>error_what.cpp</in>
         <in>string.cpp</in>
@@ -277,6 +278,8 @@
         <ccTool flags="0">
         </ccTool>
       </item>
+      <item path="bingo/TCP/tcp_ssl_server.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="bingo/configuration/json/json_parser.cpp"
             ex="false"
             tool="1"
@@ -428,6 +431,11 @@
           <buildCommand>${MAKE} ConfigName=Lib_Release</buildCommand>
           <cleanCommand>${MAKE} clean</cleanCommand>
           <executablePath></executablePath>
+          <ccTool>
+            <incDir>
+              <pElem>../../../software/boost_1_59_0</pElem>
+            </incDir>
+          </ccTool>
         </makeTool>
         <preBuild>
           <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
@@ -539,6 +547,8 @@
       <item path="bingo/TCP/config/sendor_cfg.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
+      </item>
+      <item path="bingo/TCP/tcp_ssl_server.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="bingo/configuration/json/json_parser.cpp"
             ex="false"
@@ -1011,6 +1021,8 @@
             <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux</pElem>
           </incDir>
         </ccTool>
+      </item>
+      <item path="bingo/TCP/tcp_ssl_server.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="bingo/configuration/json/json_parser.cpp"
             ex="false"
