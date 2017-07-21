@@ -15,18 +15,22 @@
 using namespace boost::posix_time;
 using namespace boost::gregorian;
 
-namespace bingo { namespace log { namespace handlers {
+namespace bingo {
+      namespace log {
+            namespace handlers {
 
-class file_logger_every_hour : public file_logger_every_day {
-public:
-	file_logger_every_hour(const char* directory, const char* filename);
-	virtual ~file_logger_every_hour();
+                  class file_logger_every_hour : public file_logger_every_day {
+                  public:
+                        file_logger_every_hour(const char* directory, const char* filename);
+                        virtual ~file_logger_every_hour();
 
-protected:
-	// Override file_logger_every_day::get_filename_postfix() method.
-	void get_filename_postfix(string& filename);
-};
+                  protected:
+                        // Override file_logger_every_day::get_filename_postfix() method.
+                        void get_filename_postfix(string& filename);
+                  };
 
-} } }
+            }
+      }
+}
 
 #endif /* BINGO_LOG_HANDLERS_FILE_LOGGER_EVERY_HOUR_HEADER_H_ */

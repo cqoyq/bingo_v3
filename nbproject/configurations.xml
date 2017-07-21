@@ -896,21 +896,13 @@
             tool="1"
             flavor2="8">
         <ccTool flags="2">
-          <incDir>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
-            <pElem>.</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>BINGO_MQ_DEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="bingo/RabbitMQ/visitor/asiohandler.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="0">
+        <ccTool flags="2">
         </ccTool>
       </item>
       <item path="bingo/TCP/config/receiver_cfg.cpp" ex="false" tool="1" flavor2="8">
@@ -1021,8 +1013,6 @@
             <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux</pElem>
           </incDir>
         </ccTool>
-      </item>
-      <item path="bingo/TCP/tcp_ssl_server.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="bingo/configuration/json/json_parser.cpp"
             ex="false"
@@ -2019,53 +2009,18 @@
         </ccTool>
       </item>
       <item path="bingo/string.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="0">
+        <ccTool flags="2">
           <incDir>
-            <pElem>/usr/include/c++/4.8.2/bits</pElem>
-            <pElem>/usr/include/c++/4.8.2</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux/bits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception</pElem>
-            <pElem>../../../software/boost_1_59_0/boost</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/lexical_cast</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/function</pElem>
-            <pElem>bingo</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/utility</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/iterator</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/lexical_cast/detail</pElem>
-            <pElem>/usr/include/c++/4.8.2/ext</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/core</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range/algorithm</pElem>
-            <pElem>/usr/include/c++/4.8.2/debug</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/config</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/gregorian</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/posix_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/iterator/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/concept/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/container</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/tools</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/policies</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move/detail</pElem>
             <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux</pElem>
+            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
             <pElem>.</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>BINGO_MQ_DEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
-      <folder path="0/bingo/RabbitMQ/config">
+      <folder path="0/bingo/RabbitMQ">
         <ccTool>
           <incDir>
             <pElem>../../../software/boost_1_59_0</pElem>
@@ -2075,95 +2030,6 @@
           <preprocessorList>
             <Elem>BINGO_MQ_DEBUG</Elem>
           </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/bingo/RabbitMQ/handlers">
-        <ccTool>
-          <incDir>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
-            <pElem>.</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>BINGO_MQ_DEBUG</Elem>
-          </preprocessorList>
-        </ccTool>
-      </folder>
-      <folder path="0/bingo/RabbitMQ/visitor">
-        <ccTool>
-          <incDir>
-            <pElem>/usr/include/c++/4.8.2</pElem>
-            <pElem>/usr/include/c++/4.8.2/bits</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux/bits</pElem>
-            <pElem>/usr/include/c++/4.8.2/ext</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/impl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/system</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception</pElem>
-            <pElem>../../../software/boost_1_59_0/boost</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/detail/impl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/core</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/gregorian</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/posix_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/ip/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/ip/detail/impl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/ip</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/lexical_cast</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception/detail</pElem>
-            <pElem>bingo/RabbitMQ/visitor</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/bind</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/utility</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/lexical_cast/detail</pElem>
-            <pElem>/usr/include/c++/4.8.2/debug</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/config</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/generic/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/local/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/asio/posix</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/integer</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/function</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/regex/v4</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/iterator</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/concept/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/container</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/tools</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/policies</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/pthread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/functional/hash/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/csbl/memory</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/tuple/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/futures</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/optional</pElem>
-            <pElem>bingo/log</pElem>
-            <pElem>bingo</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux</pElem>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>.</pElem>
-          </incDir>
         </ccTool>
       </folder>
       <folder path="0/bingo/TCP">
@@ -2491,11 +2357,16 @@
           </incDir>
         </ccTool>
       </folder>
-      <folder path="0/test/thread">
+      <folder path="0/test/rabbitmq">
         <ccTool>
           <incDir>
-            <pElem>/usr/include/c++/4.8.2</pElem>
+            <pElem>../../../software/boost_1_59_0</pElem>
+            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
+            <pElem>.</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>BINGO_MQ_DEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </folder>
       <item path="main.cpp" ex="false" tool="1" flavor2="8">
@@ -2827,190 +2698,22 @@
       </item>
       <item path="test/rabbitmq/test_publish.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="2">
-          <incDir>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
-            <pElem>.</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>BINGO_MQ_DEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="test/rabbitmq/test_routing.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="2">
-          <incDir>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
-            <pElem>.</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>BINGO_MQ_DEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="test/rabbitmq/test_simple.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/c++/4.8.2</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception</pElem>
-            <pElem>../../../software/boost_1_59_0/boost</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/function</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/gregorian</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/posix_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/system</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/pthread</pElem>
-            <pElem>/usr/include/c++/4.8.2/bits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/bind</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception/detail</pElem>
-            <pElem>test/rabbitmq</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/utils/basic_cstring</pElem>
-            <pElem>/usr/include/c++/4.8.2/ext</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/core</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux/bits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/config</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools</pElem>
-            <pElem>/usr/include/c++/4.8.2/debug</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools/old</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/integer</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/tools</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/policies</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/iterator</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/concept/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/container</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/functional/hash/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/csbl/memory</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/tuple/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/futures</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/utility</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/optional</pElem>
-            <pElem>bingo</pElem>
-            <pElem>bingo/thread</pElem>
-            <pElem>bingo/log</pElem>
-            <pElem>bingo/RabbitMQ</pElem>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux</pElem>
-            <pElem>.</pElem>
-          </incDir>
+        <ccTool flags="2">
         </ccTool>
       </item>
       <item path="test/rabbitmq/test_topic.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="2">
-          <incDir>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
-            <pElem>.</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>BINGO_MQ_DEBUG</Elem>
-          </preprocessorList>
         </ccTool>
       </item>
       <item path="test/rabbitmq/test_work.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>/usr/include/c++/4.8.2/bits</pElem>
-            <pElem>/usr/include/c++/4.8.2</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception</pElem>
-            <pElem>../../../software/boost_1_59_0/boost</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/function</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/gregorian</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/posix_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/lexical_cast</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/system</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/pthread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/bind</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception/detail</pElem>
-            <pElem>test/rabbitmq</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/utils/basic_cstring</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/utility</pElem>
-            <pElem>/usr/include/c++/4.8.2/ext</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/lexical_cast/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/core</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux/bits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/config</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools</pElem>
-            <pElem>/usr/include/c++/4.8.2/debug</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools/old</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/integer</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/tools</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/policies</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/iterator</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/concept/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/container</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/functional/hash/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/csbl/memory</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/tuple/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/futures</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/optional</pElem>
-            <pElem>bingo</pElem>
-            <pElem>bingo/thread</pElem>
-            <pElem>bingo/log</pElem>
-            <pElem>bingo/RabbitMQ</pElem>
-            <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux</pElem>
-            <pElem>.</pElem>
-          </incDir>
+        <ccTool flags="2">
         </ccTool>
       </item>
       <item path="test/tcp/test_client_t1.cpp" ex="false" tool="1" flavor2="8">
@@ -4568,6 +4271,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>/usr/include/c++/4.8.2</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test</pElem>
@@ -4644,6 +4348,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>/usr/include/c++/4.8.2</pElem>
             <pElem>/usr/include/c++/4.8.2/bits</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
@@ -4721,6 +4426,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>/usr/include/c++/4.8.2</pElem>
             <pElem>/usr/include/c++/4.8.2/bits</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
@@ -4796,77 +4502,15 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="0">
+        <ccTool flags="2">
           <incDir>
-            <pElem>/usr/include/c++/4.8.2/bits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception</pElem>
-            <pElem>../../../software/boost_1_59_0/boost</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/smart_ptr</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/function</pElem>
-            <pElem>bingo</pElem>
-            <pElem>bingo/thread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/gregorian</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/date_time/posix_time</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/io</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/system</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/pthread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/bind</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/exception/detail</pElem>
-            <pElem>test/thread</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/utils/basic_cstring</pElem>
-            <pElem>/usr/include/c++/4.8.2/ext</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move</pElem>
-            <pElem>/usr/include/c++/4.8.2/backward</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/core</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux/bits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/config</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools</pElem>
-            <pElem>/usr/include/c++/4.8.2/debug</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/tools/old</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/test/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/type_traits/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/integer</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/tools</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/math/policies</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/numeric/conversion</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/move/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/iterator</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/range/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/concept/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/algorithm/string/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/container</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/chrono</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/ratio</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/functional/hash/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/atomic</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/csbl/memory</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/tuple/detail</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/thread/futures</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/utility</pElem>
-            <pElem>../../../software/boost_1_59_0/boost/optional</pElem>
             <pElem>../../../software/boost_1_59_0</pElem>
-            <pElem>/usr/include/c++/4.8.2/x86_64-redhat-linux</pElem>
+            <pElem>../../../software/mysql-connector-c-commercial-6.1.3-linux-glibc2.5-x86_64/include</pElem>
             <pElem>.</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>BINGO_MQ_DEBUG</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="test/thread/test_many_to_one_t1.cpp"
@@ -4875,6 +4519,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>/usr/include/c++/4.8.2</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test</pElem>
@@ -4950,6 +4595,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>/usr/include/c++/4.8.2</pElem>
             <pElem>/usr/include/c++/4.8.2/bits</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>
@@ -5026,6 +4672,7 @@
             flavor2="8">
         <ccTool flags="0">
           <incDir>
+            <pElem>/usr/include/c++/4.8.2</pElem>
             <pElem>/usr/include/c++/4.8.2/bits</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/tree</pElem>
             <pElem>../../../software/boost_1_59_0/boost/test/utils</pElem>

@@ -9,50 +9,62 @@
 
 #include "handlers/local_log_visitor.h"
 #include "handlers/rbmq_log_visitor.h"
-using namespace bingo::log::handlers;
+using namespace bingo::log::handlers ;
 
-using namespace bingo::log;
+using namespace bingo::log ;
 
-log_factory::log_factory() {
-	// TODO Auto-generated constructor stub
-	hdr_ = 0;
+log_factory::log_factory( ) {
+     // TODO Auto-generated constructor stub
+     hdr_ = 0 ;
 }
 
-log_factory::~log_factory() {
-	// TODO Auto-generated destructor stub
-	if(hdr_) delete hdr_;
+log_factory::~log_factory( ) {
+     // TODO Auto-generated destructor stub
+     if ( hdr_ ) delete hdr_ ;
 }
 
-bool log_factory::make_local_logger(const char* config_file){
-	local_log_visitor* p = new local_log_visitor();
-	hdr_ = p;
+bool log_factory::make_local_logger( const char* config_file ) {
+     local_log_visitor* p = new local_log_visitor( ) ;
+     hdr_ = p ;
 
-	if(!p->read_config(config_file)){
-		p->err().clone(e_what_);
-		return false;
-	}else{
-		return true;
-	}
+     if ( !p->read_config( config_file ) ) {
+          p->err( ).clone( e_what_ ) ;
+          return false ;
+     } else {
+          return true ;
+     }
 }
 
-bool log_factory::make_rabbitmq_logger(rabbitmq_factory* factory){
-	rbmq_log_visitor* p = new rbmq_log_visitor();
+bool log_factory::make_rabbitmq_logger( rabbitmq_factory* factory ) {
+     rbmq_log_visitor* p = new rbmq_log_visitor( ) ;
 
-	hdr_ = p;
+     hdr_ = p ;
 
-	if(!p->read_config(factory)){
-		p->err().clone(e_what_);
-		return false;
-	}else{
-		return true;
-	}
+     if ( !p->read_config( factory ) ) {
+          p->err( ).clone( e_what_ ) ;
+          return false ;
+     } else {
+          return true ;
+     }
 }
 
-bingo::error_what& log_factory::err(){
-	return e_what_;
+bingo::error_what& log_factory::err( ) {
+     return e_what_ ;
 }
 
-void log_factory::handle(int level, const char* tag, std::string& info){
-	hdr_->handle(level, tag, info);
+void log_factory::handle( int level , const char* tag , std::string& info ) {
+
+     // lock part field.
+     mutex::scoped_lock lock( mu_ ) ;
+
+     hdr_->handle( level , tag , info ) ;
+}
+
+void log_factory::set_level( log_level level ) {
+
+     // lock part field.
+     mutex::scoped_lock lock( mu_ ) ;
+
+     hdr_->set_level( level ) ;
 }
 

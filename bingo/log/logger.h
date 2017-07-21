@@ -20,41 +20,46 @@ using namespace boost::posix_time;
 
 #include "log_level.h"
 
-namespace bingo { namespace log {
+namespace bingo {
+      namespace log {
 
-// Log class.
-class logger {
-public:
-	logger();
-	virtual ~logger();
+            // Log class.
 
-	void log_f(const char* tag, string& data);
+            class logger {
+            public:
+                  logger();
+                  virtual ~logger();
 
-	void log_e(const char* tag, string& data);
+                  void log_f(const char* tag, string& data);
 
-	void log_i(const char* tag, string& data);
+                  void log_e(const char* tag, string& data);
 
-	void log_d(const char* tag, string& data);
+                  void log_i(const char* tag, string& data);
 
-
-
-	// Current log's level, Default is LOG_LEVEL_ALL.
-	log_level level();
-
-	void level(log_level v);
-
-protected:
-	virtual void log_out(string& msg){};
-
-protected:
-
-	mutex mu_;
-
-	// Log Level, LOG_LEVEL_ALL is default.
-	log_level cur_level_;
-};
+                  void log_d(const char* tag, string& data);
 
 
-} }
+
+                  // Current log's level, Default is LOG_LEVEL_ALL.
+                  log_level level();
+
+                  void level(log_level v);
+
+            protected:
+
+                  virtual void log_out(string& msg) {
+                  };
+
+            protected:
+
+                  mutex mu_;
+
+                  // Log Level, LOG_LEVEL_ALL is default.
+                  log_level cur_level_;
+            };
+
+
+      }
+}
 
 #endif /* BINGO_LOG_LOGGER_HEADER_H_ */

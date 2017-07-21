@@ -25,110 +25,110 @@ using namespace bingo::log;
 		memset(&ctime[0], 0x00, 25); \
 		\
 		sprintf(&ctime[0], "%4d-%02d-%02d %02d:%02d:%02d.%03d", year, month, day, hour, minute, second, millsecond); \
-		now.append(ctime); \
+                now.append(ctime); \
 }
 
-logger::logger(){
-	cur_level_ = LOG_LEVEL_ALL;
+logger::logger( ) {
+     cur_level_ = LOG_LEVEL_ALL ;
 }
 
-logger::~logger(){
+logger::~logger( ) {
 
 }
 
-void logger::log_f(const char* tag, string& data){
-	if(cur_level_ < LOG_LEVEL_FATAL){
-		return;
-	}else{
-		string msg;
+void logger::log_f( const char* tag , string& data ) {
+     if ( cur_level_ < LOG_LEVEL_FATAL ) {
+          return ;
+     } else {
+          string msg ;
 
-		string now;
-		get_now(now);
-		msg.append(now);
-		msg.append("@");
-		msg.append(tag);
-		msg.append("@");
-		msg.append("fatal");
-		msg.append("@");
-		msg.append(data.c_str());
+          string now ;
+          get_now( now ) ;
+          msg.append( now ) ;
+          msg.append( "@" ) ;
+          msg.append( tag ) ;
+          msg.append( "@" ) ;
+          msg.append( "fatal" ) ;
+          msg.append( "@" ) ;
+          msg.append( data.c_str( ) ) ;
 
-		log_out(msg);
-	}
+          log_out( msg ) ;
+     }
 }
 
-void logger::log_e(const char* tag, string& data){
+void logger::log_e( const char* tag , string& data ) {
 
-	if(cur_level_ < LOG_LEVEL_ERROR){
-		return;
-	}else{
-		string msg;
+     if ( cur_level_ < LOG_LEVEL_ERROR ) {
+          return ;
+     } else {
+          string msg ;
 
-		string now;
-		get_now(now);
-		msg.append(now);
-		msg.append("@");
-		msg.append(tag);
-		msg.append("@");
-		msg.append("error");
-		msg.append("@");
-		msg.append(data.c_str());
+          string now ;
+          get_now( now ) ;
+          msg.append( now ) ;
+          msg.append( "@" ) ;
+          msg.append( tag ) ;
+          msg.append( "@" ) ;
+          msg.append( "error" ) ;
+          msg.append( "@" ) ;
+          msg.append( data.c_str( ) ) ;
 
-		log_out(msg);
-	}
+          log_out( msg ) ;
+     }
 }
 
-void logger::log_i(const char* tag, string& data){
-	if(cur_level_ < LOG_LEVEL_INFO){
-		return;
-	}else{
-		string msg;
+void logger::log_i( const char* tag , string& data ) {
+     if ( cur_level_ < LOG_LEVEL_INFO ) {
+          return ;
+     } else {
+          string msg ;
 
-		string now;
-		get_now(now);
-		msg.append(now);
-		msg.append("@");
-		msg.append(tag);
-		msg.append("@");
-		msg.append("info");
-		msg.append("@");
-		msg.append(data.c_str());
+          string now ;
+          get_now( now ) ;
+          msg.append( now ) ;
+          msg.append( "@" ) ;
+          msg.append( tag ) ;
+          msg.append( "@" ) ;
+          msg.append( "info" ) ;
+          msg.append( "@" ) ;
+          msg.append( data.c_str( ) ) ;
 
-		log_out(msg);
-	}
+          log_out( msg ) ;
+     }
 }
 
-void logger::log_d(const char* tag, string& data){
-	if(cur_level_ < LOG_LEVEL_DEBUG){
-		return;
-	}else{
-		string msg;
+void logger::log_d( const char* tag , string& data ) {
+     if ( cur_level_ < LOG_LEVEL_DEBUG ) {
+          return ;
+     } else {
+          string msg ;
 
-		string now;
-		get_now(now);
-		msg.append(now);
-		msg.append("@");
-		msg.append(tag);
-		msg.append("@");
-		msg.append("debug");
-		msg.append("@");
-		msg.append(data.c_str());
+          string now ;
+          get_now( now ) ;
+          msg.append( now ) ;
+          msg.append( "@" ) ;
+          msg.append( tag ) ;
+          msg.append( "@" ) ;
+          msg.append( "debug" ) ;
+          msg.append( "@" ) ;
+          msg.append( data.c_str( ) ) ;
 
-		log_out(msg);
-	}
+          log_out( msg ) ;
+     }
 }
 
-log_level logger::level(){
-	// lock part field.
-	mutex::scoped_lock lock(mu_);
+log_level logger::level( ) {
+     // lock part field.
+     mutex::scoped_lock lock( mu_ ) ;
 
-	return cur_level_;
+     return cur_level_ ;
 }
 
-void logger::level(log_level v){
-	// lock part field.
-	mutex::scoped_lock lock(mu_);
+void logger::level( log_level v ) {
+     // lock part field.
+     mutex::scoped_lock lock( mu_ ) ;
 
-	cur_level_ = v;
+     cur_level_ = v ;
 }
 
 

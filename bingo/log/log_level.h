@@ -13,12 +13,12 @@
 namespace bingo { namespace log {
 
 enum log_level {
-	LOG_LEVEL_OFF 		= 0x00,
+	LOG_LEVEL_OFF 	= 0x00,
 	LOG_LEVEL_FATAL 	= 0x01,
 	LOG_LEVEL_ERROR 	= 0x02,
-	LOG_LEVEL_INFO 		= 0x03,
+	LOG_LEVEL_INFO 	= 0x03,
 	LOG_LEVEL_DEBUG 	= 0x04,
-	LOG_LEVEL_ALL 		= 0x05,
+	LOG_LEVEL_ALL 	= 0x05,
 	LOG_LEVEL_UNKNOWN = 0xFF,
 };
 

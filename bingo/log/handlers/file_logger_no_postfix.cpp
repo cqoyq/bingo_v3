@@ -7,17 +7,17 @@
 
 #include "file_logger_no_postfix.h"
 
-using namespace bingo::log::handlers;
+using namespace bingo::log::handlers ;
 
-file_logger_no_postfix::file_logger_no_postfix(const char* directory, const char* filename) :
-		file_logger_every_day(directory, filename){
+file_logger_no_postfix::file_logger_no_postfix( const char* directory , const char* filename ) :
+file_logger_every_day( directory , filename ) {
 
 }
 
-file_logger_no_postfix::~file_logger_no_postfix(){
+file_logger_no_postfix::~file_logger_no_postfix( ) {
 
-};
+} ;
 
-void file_logger_no_postfix::get_filename_postfix(string& filename){
+void file_logger_no_postfix::get_filename_postfix( string& filename ) {
 }
 

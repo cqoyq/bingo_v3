@@ -13,15 +13,27 @@
 #include <vector>
 using namespace std;
 
-namespace bingo { namespace log {
+#include "log_level.h"
 
-class log_handler
-{
-public:
-	virtual ~log_handler(){}
-   virtual void handle(int level, const char* tag, std::string& info)=0;
-};
+namespace bingo {
+      namespace log {
 
-}  }
+            class log_handler {
+            public:
+
+                  log_handler() {
+                  };
+
+                  virtual ~log_handler() {
+                  };
+
+                  virtual void handle(int level, const char* tag, std::string& info) = 0;
+
+                  virtual void set_level(log_level level) {
+                  };
+            };
+
+      }
+}
 
 #endif /* BINGO_LOG_LOG_HANDLER_H */
